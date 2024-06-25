@@ -25,6 +25,9 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    @Enumerated(EnumType.STRING)
+    private UserRole userRole = UserRole.USER;
+
     @Builder(access = AccessLevel.PRIVATE)
     private User(String email, String password) {
         this.email = email;
