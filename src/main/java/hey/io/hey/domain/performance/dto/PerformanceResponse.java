@@ -30,17 +30,18 @@ public class PerformanceResponse {
     @JsonSerialize(using = LocalDateSerializer.class)
     @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate endDate;
-    private String poster;
     private String theater;
+    private String poster;
+
 
     @QueryProjection
-    public PerformanceResponse(String id, String title, LocalDate startDate, LocalDate endDate, String poster, String theater) {
+    public PerformanceResponse(String id, String title, LocalDate startDate, LocalDate endDate, String theater, String poster) {
         this.id = id;
         this.title = title;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.poster = poster;
         this.theater = theater;
+        this.poster = poster;
     }
 
     public PerformanceResponse(Performance performance) {
@@ -48,8 +49,8 @@ public class PerformanceResponse {
         this.title = performance.getTitle();
         this.startDate = performance.getStartDate();
         this.endDate = performance.getEndDate();
-        this.poster = performance.getPoster();
         this.theater = performance.getTheater();
+        this.poster = performance.getPoster();
     }
 
     public static class Slice extends SliceImpl<PerformanceResponse> {

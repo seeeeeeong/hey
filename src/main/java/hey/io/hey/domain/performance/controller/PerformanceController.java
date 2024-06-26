@@ -2,10 +2,7 @@ package hey.io.hey.domain.performance.controller;
 
 import hey.io.hey.common.response.SliceResponse;
 import hey.io.hey.common.response.SuccessResponse;
-import hey.io.hey.domain.performance.dto.CreatePerformanceRequest;
-import hey.io.hey.domain.performance.dto.PerformanceFilterRequest;
-import hey.io.hey.domain.performance.dto.PerformanceResponse;
-import hey.io.hey.domain.performance.dto.PerformanceSearchRequest;
+import hey.io.hey.domain.performance.dto.*;
 import hey.io.hey.domain.performance.service.PerformanceService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,12 +19,6 @@ import java.util.List;
 public class PerformanceController {
 
     private final PerformanceService performanceService;
-
-    @PostMapping
-    public ResponseEntity<SuccessResponse<Void>> createPerformance(@RequestBody CreatePerformanceRequest request) {
-        performanceService.createPerformance(request);
-        return ResponseEntity.noContent().build();
-    }
 
     @GetMapping
     public ResponseEntity<SuccessResponse<SliceResponse<PerformanceResponse>>> getPerformancesByCondition(@RequestBody PerformanceFilterRequest request,
@@ -48,5 +39,10 @@ public class PerformanceController {
     @GetMapping("/new")
     public ResponseEntity<SuccessResponse<List<PerformanceResponse>>> getNewPerformances() {
         return SuccessResponse.of(performanceService.getNewPerformances()).asHttp(HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<SuccessResponse<PerformanceDetailResponse>> getPerformance(@PathVariable String id) {
+        return SuccessResponse.of(performanceService.getPerformance(id)).asHttp(HttpStatus.OK);
     }
 }

@@ -1,8 +1,8 @@
 package hey.io.hey.domain.performance.domain;
 
 import hey.io.hey.common.entity.BaseEntityWithUpdate;
-import hey.io.hey.domain.performance.domain.enums.Area;
 import hey.io.hey.domain.performance.domain.enums.PerformanceStatus;
+import hey.io.hey.domain.place.domain.Place;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -33,15 +33,14 @@ public class Performance extends BaseEntityWithUpdate {
     private String poster;
     @Enumerated(EnumType.STRING)
     private PerformanceStatus status;
-    @Enumerated(EnumType.STRING)
-    private Area area;
+    @Column(name = "story_urls", columnDefinition = "TEXT")
     private String storyUrls;
     private String schedule;
 
     @Builder(toBuilder = true)
     private Performance(String id, Place place, String title, LocalDate startDate, LocalDate endDate,
                         String theater, String cast, String runtime, String age, String price,
-                        String poster, PerformanceStatus status, Area area, String storyUrls, String schedule) {
+                        String poster, PerformanceStatus status, String storyUrls, String schedule) {
         this.id = id;
         this.place = place;
         this.title = title;
@@ -54,8 +53,16 @@ public class Performance extends BaseEntityWithUpdate {
         this.price = price;
         this.poster = poster;
         this.status = status;
-        this.area = area;
         this.storyUrls = storyUrls;
         this.schedule = schedule;
     }
+
+    public void updateStatus(PerformanceStatus status) {
+        this.status = status;
+    }
+
+    public void updatePlace(Place place) {
+        this.place = place;
+    }
+
 }

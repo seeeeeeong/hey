@@ -8,7 +8,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort.Direction;
 
+import java.util.List;
+
 public interface PerformanceQueryRepository {
+
+    List<String> findAllIds();
 
     Slice<PerformanceResponse> getPerformancesByCondition(PerformanceFilterRequest request, Pageable pageable, Direction direction);
     Slice<PerformanceResponse> searchPerformances(PerformanceSearchRequest request, Pageable pageable, Direction direction);

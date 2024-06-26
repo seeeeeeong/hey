@@ -26,6 +26,13 @@ public class PerformanceQueryRepositoryImpl implements PerformanceQueryRepositor
     private final JPAQueryFactory queryFactory;
 
     @Override
+    public List<String> findAllIds() {
+        return queryFactory.select(performance.id)
+                .from(performance)
+                .fetch();
+    }
+
+    @Override
     public Slice<PerformanceResponse> getPerformancesByCondition(PerformanceFilterRequest request, Pageable pageable, Sort.Direction direction) {
 
         int pageSize = pageable.getPageSize();
