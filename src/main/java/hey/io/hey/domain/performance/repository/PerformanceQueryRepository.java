@@ -6,11 +6,9 @@ import hey.io.hey.domain.performance.dto.PerformanceResponse;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort.Direction;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
-@Repository
-public interface PerformanceRepository extends JpaRepository<Performance, String>, PerformanceQueryRepository {
+public interface PerformanceQueryRepository {
 
+    Slice<PerformanceResponse> getPerformancesByCondition(PerformanceFilterRequest request, Pageable pageable, Direction direction);
 
 }
