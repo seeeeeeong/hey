@@ -5,7 +5,9 @@ import hey.io.hey.common.response.SuccessResponse;
 import hey.io.hey.domain.performance.dto.CreatePerformanceRequest;
 import hey.io.hey.domain.performance.dto.PerformanceFilterRequest;
 import hey.io.hey.domain.performance.dto.PerformanceResponse;
+import hey.io.hey.domain.performance.dto.PerformanceSearchRequest;
 import hey.io.hey.domain.performance.service.PerformanceService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
@@ -31,5 +33,13 @@ public class PerformanceController {
                                                                                                           @RequestParam(value = "page", required = false, defaultValue = "0") int page,
                                                                                                           @RequestParam(name = "direction", required = false, defaultValue = "DESC") Direction direction) {
         return SuccessResponse.of(performanceService.getPerformancesByCondition(request, size, page, direction)).asHttp(HttpStatus.OK);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<SuccessResponse<SliceResponse<PerformanceResponse>>> searchPerformances(@Valid @RequestBody PerformanceSearchRequest request,
+                                                                                                  @RequestParam(value = "size", required = false, defaultValue = "20") int size,
+                                                                                                  @RequestParam(value = "page", required = false, defaultValue = "0") int page,
+                                                                                                  @RequestParam(name = "direction", required = false, defaultValue = "DESC") Direction direction) {
+        return SuccessResponse.of(performanceService.searchPerformances(request, size, page, direction)).asHttp(HttpStatus.OK);
     }
 }

@@ -26,7 +26,8 @@ public class SecurityConfig {
     private final String[] permitAllEndpointList = {
             "/users/join",
             "/users/login",
-            "/performances"
+            "/performances",
+            "/performances/search"
     };
 
     @Bean

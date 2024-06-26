@@ -5,6 +5,7 @@ import hey.io.hey.domain.performance.domain.Performance;
 import hey.io.hey.domain.performance.dto.CreatePerformanceRequest;
 import hey.io.hey.domain.performance.dto.PerformanceFilterRequest;
 import hey.io.hey.domain.performance.dto.PerformanceResponse;
+import hey.io.hey.domain.performance.dto.PerformanceSearchRequest;
 import hey.io.hey.domain.performance.repository.PerformanceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -46,6 +47,11 @@ public class PerformanceService {
 
     public SliceResponse<PerformanceResponse> getPerformancesByCondition(PerformanceFilterRequest request, int size, int page, Direction direction) {
         Slice<PerformanceResponse> performances = performanceRepository.getPerformancesByCondition(request, Pageable.ofSize(size).withPage(page), direction);
+        return new SliceResponse<>(performances);
+    }
+
+    public SliceResponse<PerformanceResponse> searchPerformances(PerformanceSearchRequest request, int size, int page, Direction direction) {
+        Slice<PerformanceResponse> performances = performanceRepository.searchPerformances(request, Pageable.ofSize(size).withPage(page), direction);
         return new SliceResponse<>(performances);
     }
 
