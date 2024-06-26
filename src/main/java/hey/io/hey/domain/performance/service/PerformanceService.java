@@ -14,6 +14,9 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -53,6 +56,14 @@ public class PerformanceService {
     public SliceResponse<PerformanceResponse> searchPerformances(PerformanceSearchRequest request, int size, int page, Direction direction) {
         Slice<PerformanceResponse> performances = performanceRepository.searchPerformances(request, Pageable.ofSize(size).withPage(page), direction);
         return new SliceResponse<>(performances);
+    }
+
+    public List<PerformanceResponse> getNewPerformances() {
+        List<Performance> newPerformances = performanceRepository.findTop5ByOrderByCreatedAtDesc();
+
+        return newPerformances.stream()
+                .map(PerformanceResponse::new)
+                .collect(Collectors.toList());
     }
 
 }

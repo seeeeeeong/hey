@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/performances")
 @RequiredArgsConstructor
@@ -41,5 +43,10 @@ public class PerformanceController {
                                                                                                   @RequestParam(value = "page", required = false, defaultValue = "0") int page,
                                                                                                   @RequestParam(name = "direction", required = false, defaultValue = "DESC") Direction direction) {
         return SuccessResponse.of(performanceService.searchPerformances(request, size, page, direction)).asHttp(HttpStatus.OK);
+    }
+
+    @GetMapping("/new")
+    public ResponseEntity<SuccessResponse<List<PerformanceResponse>>> getNewPerformances() {
+        return SuccessResponse.of(performanceService.getNewPerformances()).asHttp(HttpStatus.OK);
     }
 }

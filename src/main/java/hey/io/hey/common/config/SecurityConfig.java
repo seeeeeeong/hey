@@ -27,7 +27,8 @@ public class SecurityConfig {
             "/users/join",
             "/users/login",
             "/performances",
-            "/performances/search"
+            "/performances/search",
+            "/performances/new"
     };
 
     @Bean

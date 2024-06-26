@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.querydsl.core.annotations.QueryProjection;
+import hey.io.hey.domain.performance.domain.Performance;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,6 +41,15 @@ public class PerformanceResponse {
         this.endDate = endDate;
         this.poster = poster;
         this.theater = theater;
+    }
+
+    public PerformanceResponse(Performance performance) {
+        this.id = performance.getId();
+        this.title = performance.getTitle();
+        this.startDate = performance.getStartDate();
+        this.endDate = performance.getEndDate();
+        this.poster = performance.getPoster();
+        this.theater = performance.getTheater();
     }
 
     public static class Slice extends SliceImpl<PerformanceResponse> {
