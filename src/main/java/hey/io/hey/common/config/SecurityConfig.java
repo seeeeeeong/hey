@@ -6,6 +6,7 @@ import hey.io.hey.common.security.jwt.JwtAuthenticationEntryPoint;
 import hey.io.hey.common.security.jwt.JwtAuthenticationFilter;
 import hey.io.hey.common.security.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -25,7 +26,10 @@ public class SecurityConfig {
 
     private final String[] permitAllEndpointList = {
             "/users/join",
-            "/users/login"
+            "/users/login",
+            "/performances/**",
+            "/batch/**",
+            "/h2-console/**"
     };
 
     @Bean

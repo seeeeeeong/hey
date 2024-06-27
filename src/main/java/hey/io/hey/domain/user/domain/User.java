@@ -1,5 +1,6 @@
 package hey.io.hey.domain.user.domain;
 
+import hey.io.hey.common.entity.BaseEntityWithUpdate;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
@@ -11,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Table(name = "\"user\"")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User {
+public class User extends BaseEntityWithUpdate {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

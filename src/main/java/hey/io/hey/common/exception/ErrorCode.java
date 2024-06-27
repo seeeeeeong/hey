@@ -19,7 +19,13 @@ public enum ErrorCode {
     JWT_TOKEN_NOT_FOUND(404, "S008", "jwt token이 없습니다."),
 
     // User
-    USER_NOT_FOUND(404, "U001", "회원을 찾을 수 없습니다.");
+    USER_NOT_FOUND(404, "U001", "회원을 찾을 수 없습니다."),
+
+    // Performance
+    PERFORMANCE_NOT_FOUND(404, "P001", "공연을 찾을 수 없습니다."),
+
+    // Place
+    PLACE_NOT_FOUND(404, "PL001", "장소를 찾을 수 없습니다.");
 
     private final int status;
     private final String code;

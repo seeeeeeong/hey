@@ -20,5 +20,16 @@ spring:
 
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
+  h2:
+    console:
+      enabled: true
+
+kopis:
+  performance:
+    batch-count: 200
+    url: http://www.kopis.or.kr/openApi/restful
+
+  api:
+    key: ${KOPIS_API_KEY}
 
 
