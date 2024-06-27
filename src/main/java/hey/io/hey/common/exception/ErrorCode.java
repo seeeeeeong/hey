@@ -23,9 +23,13 @@ public enum ErrorCode {
 
     // Performance
     PERFORMANCE_NOT_FOUND(404, "P001", "공연을 찾을 수 없습니다."),
+    ALREADY_FOLLOWED_PERFORMANCE(404, "P002", "이미 팔로우한 공연입니다."),
 
     // Place
-    PLACE_NOT_FOUND(404, "PL001", "장소를 찾을 수 없습니다.");
+    PLACE_NOT_FOUND(404, "PL001", "장소를 찾을 수 없습니다."),
+
+    // FOLLOW
+    FOLLOW_NOT_FOUND(404, "F001", "팔로잉을 찾을 수 없습니다.");
 
     private final int status;
     private final String code;

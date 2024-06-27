@@ -3,7 +3,7 @@ package hey.io.hey.domain.performance.repository;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import hey.io.hey.domain.performance.domain.BoxOfficeRank;
-import hey.io.hey.domain.boxoffice.domain.QBoxOfficeRank;
+import hey.io.hey.domain.performance.domain.QBoxOfficeRank;
 import hey.io.hey.domain.performance.domain.enums.TimePeriod;
 import hey.io.hey.domain.performance.dto.BoxOfficeRankRequest;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +11,8 @@ import org.springframework.util.ObjectUtils;
 
 import java.util.Optional;
 
-import static hey.io.hey.domain.boxoffice.domain.QBoxOfficeRank.boxOfficeRank;
+import static hey.io.hey.domain.performance.domain.QBoxOfficeRank.boxOfficeRank;
+
 
 @RequiredArgsConstructor
 public class BoxOfficeRankQueryRepositoryImpl implements BoxOfficeRankQueryRepository{
