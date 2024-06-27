@@ -1,4 +1,4 @@
-package hey.io.hey.domain.boxoffice.domain.enums;
+package hey.io.hey.domain.performance.domain.enums;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

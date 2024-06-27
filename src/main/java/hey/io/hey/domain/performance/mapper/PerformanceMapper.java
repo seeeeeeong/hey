@@ -1,4 +1,4 @@
-package hey.io.hey.module.mapper;
+package hey.io.hey.domain.performance.mapper;
 
 import hey.io.hey.domain.performance.domain.Performance;
 import hey.io.hey.domain.performance.dto.PerformanceDetailResponse;

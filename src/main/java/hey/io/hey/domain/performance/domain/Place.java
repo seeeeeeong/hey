@@ -1,4 +1,4 @@
-package hey.io.hey.domain.place.domain;
+package hey.io.hey.domain.performance.domain;
 
 
 import hey.io.hey.common.entity.BaseEntityWithUpdate;

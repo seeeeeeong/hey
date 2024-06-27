@@ -1,7 +1,9 @@
 package hey.io.hey.domain.performance.controller;
 
+import hey.io.hey.common.resolver.AuthUser;
 import hey.io.hey.common.response.SliceResponse;
 import hey.io.hey.common.response.SuccessResponse;
+import hey.io.hey.common.security.jwt.JwtTokenInfo;
 import hey.io.hey.domain.performance.dto.*;
 import hey.io.hey.domain.performance.service.PerformanceService;
 import jakarta.validation.Valid;
@@ -41,13 +43,14 @@ public class PerformanceController {
         return SuccessResponse.of(performanceService.getNewPerformances()).asHttp(HttpStatus.OK);
     }
 
-//    @GetMapping("/rank")
-//    public ResponseEntity<SuccessResponse<List<BoxOfficeRankResponse>>> getBoxOffice() {
-//        return SuccessResponse.of(performanceService.getBoxOfficeRank()).asHttp(HttpStatus.OK);
-//    }
+    @GetMapping("/rank")
+    public ResponseEntity<SuccessResponse<List<PerformanceResponse>>> getBoxOffice(@RequestBody BoxOfficeRankRequest request) {
+        return SuccessResponse.of(performanceService.getBoxOfficeRank(request)).asHttp(HttpStatus.OK);
+    }
 
     @GetMapping("/{id}")
-    public ResponseEntity<SuccessResponse<PerformanceDetailResponse>> getPerformance(@PathVariable String id) {
+    public ResponseEntity<SuccessResponse<PerformanceDetailResponse>> getPerformance(@AuthUser JwtTokenInfo jwtTokenInfo,
+                                                                                     @PathVariable String id) {
         return SuccessResponse.of(performanceService.getPerformance(id)).asHttp(HttpStatus.OK);
     }
 }

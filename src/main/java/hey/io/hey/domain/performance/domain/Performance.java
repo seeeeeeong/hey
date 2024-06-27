@@ -2,7 +2,6 @@ package hey.io.hey.domain.performance.domain;
 
 import hey.io.hey.common.entity.BaseEntityWithUpdate;
 import hey.io.hey.domain.performance.domain.enums.PerformanceStatus;
-import hey.io.hey.domain.place.domain.Place;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -56,6 +55,7 @@ public class Performance extends BaseEntityWithUpdate {
         this.storyUrls = storyUrls;
         this.schedule = schedule;
     }
+
 
     public void updateStatus(PerformanceStatus status) {
         this.status = status;

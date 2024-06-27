@@ -1,8 +1,8 @@
-package hey.io.hey.schedule;
+package hey.io.hey.common.scheduler.controller;
 
 import hey.io.hey.common.response.SuccessResponse;
+import hey.io.hey.common.scheduler.dto.PerformanceBatchUpdateRequest;
 import hey.io.hey.domain.performance.service.PerformanceService;
-import hey.io.hey.schedule.dto.PerformanceBatchUpdateRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

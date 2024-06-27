@@ -1,4 +1,4 @@
-package hey.io.hey.schedule;
+package hey.io.hey.common.scheduler;
 
 import hey.io.hey.domain.performance.service.PerformanceService;
 import lombok.RequiredArgsConstructor;

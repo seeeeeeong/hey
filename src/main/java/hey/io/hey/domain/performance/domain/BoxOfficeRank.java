@@ -1,7 +1,7 @@
-package hey.io.hey.domain.boxoffice.domain;
+package hey.io.hey.domain.performance.domain;
 
 import hey.io.hey.common.entity.BaseEntityWithUpdate;
-import hey.io.hey.domain.boxoffice.domain.enums.TimePeriod;
+import hey.io.hey.domain.performance.domain.enums.TimePeriod;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;

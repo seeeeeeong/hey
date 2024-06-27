@@ -2,21 +2,21 @@ package hey.io.hey.domain.performance.service;
 
 import hey.io.hey.common.exception.BusinessException;
 import hey.io.hey.common.exception.ErrorCode;
-import hey.io.hey.domain.boxoffice.domain.BoxOfficeRank;
-import hey.io.hey.domain.boxoffice.domain.enums.TimePeriod;
-import hey.io.hey.domain.boxoffice.repository.BoxOfficeRankRepository;
+import hey.io.hey.common.kopis.client.dto.*;
+import hey.io.hey.domain.performance.domain.BoxOfficeRank;
+import hey.io.hey.domain.performance.domain.enums.TimePeriod;
+import hey.io.hey.domain.performance.repository.BoxOfficeRankRepository;
 import hey.io.hey.domain.performance.domain.PerformancePrice;
 import hey.io.hey.domain.performance.domain.enums.PerformanceStatus;
 import hey.io.hey.domain.performance.repository.PerformancePriceRepository;
-import hey.io.hey.domain.place.repository.PlaceRepository;
-import hey.io.hey.module.kopis.client.dto.*;
+import hey.io.hey.domain.performance.repository.PlaceRepository;
 import hey.io.hey.common.response.SliceResponse;
 import hey.io.hey.domain.performance.domain.Performance;
 import hey.io.hey.domain.performance.dto.*;
 import hey.io.hey.domain.performance.repository.PerformanceRepository;
-import hey.io.hey.domain.place.domain.Place;
-import hey.io.hey.module.kopis.service.KopisService;
-import hey.io.hey.module.mapper.PerformanceMapper;
+import hey.io.hey.domain.performance.domain.Place;
+import hey.io.hey.common.kopis.service.KopisService;
+import hey.io.hey.domain.performance.mapper.PerformanceMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -66,7 +66,18 @@ public class PerformanceService {
                 .collect(Collectors.toList());
     }
 
+    public List<PerformanceResponse> getBoxOfficeRank(BoxOfficeRankRequest request) {
+        BoxOfficeRank boxOfficeRank = boxOfficeRankRepository.findBoxOfficeRank(request)
+                .orElseThrow(() -> new BusinessException(ErrorCode.PERFORMANCE_NOT_FOUND));
 
+        String[] performanceIds = boxOfficeRank.getPerformanceIds().split("\\|");
+
+        List<Performance> performanceList = performanceRepository.findAllById(Arrays.asList(performanceIds));
+
+        return performanceList.stream()
+                .map(PerformanceResponse::new)
+                .collect(Collectors.toList());
+    }
 
     public PerformanceDetailResponse getPerformance(String id) {
         Performance performance = performanceRepository.findById(id)

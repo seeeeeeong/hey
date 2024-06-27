@@ -1,6 +1,6 @@
-package hey.io.hey.module.kopis.client.dto;
+package hey.io.hey.common.kopis.client.dto;
 
-import hey.io.hey.domain.place.domain.Place;
+import hey.io.hey.domain.performance.domain.Place;
 
 public record KopisPlaceDetailResponse(
         String fcltynm,
