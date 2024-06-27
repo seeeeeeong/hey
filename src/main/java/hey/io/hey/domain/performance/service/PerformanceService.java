@@ -2,19 +2,19 @@ package hey.io.hey.domain.performance.service;
 
 import hey.io.hey.common.exception.BusinessException;
 import hey.io.hey.common.exception.ErrorCode;
+import hey.io.hey.domain.boxoffice.domain.BoxOfficeRank;
+import hey.io.hey.domain.boxoffice.domain.enums.TimePeriod;
+import hey.io.hey.domain.boxoffice.repository.BoxOfficeRankRepository;
 import hey.io.hey.domain.performance.domain.PerformancePrice;
 import hey.io.hey.domain.performance.domain.enums.PerformanceStatus;
 import hey.io.hey.domain.performance.repository.PerformancePriceRepository;
 import hey.io.hey.domain.place.repository.PlaceRepository;
-import hey.io.hey.module.kopis.client.dto.KopisPerformanceDetailResponse;
-import hey.io.hey.module.kopis.client.dto.KopisPerformanceRequest;
-import hey.io.hey.module.kopis.client.dto.KopisPerformanceResponse;
+import hey.io.hey.module.kopis.client.dto.*;
 import hey.io.hey.common.response.SliceResponse;
 import hey.io.hey.domain.performance.domain.Performance;
 import hey.io.hey.domain.performance.dto.*;
 import hey.io.hey.domain.performance.repository.PerformanceRepository;
 import hey.io.hey.domain.place.domain.Place;
-import hey.io.hey.module.kopis.client.dto.KopisPlaceDetailResponse;
 import hey.io.hey.module.kopis.service.KopisService;
 import hey.io.hey.module.mapper.PerformanceMapper;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +30,9 @@ import org.springframework.util.StringUtils;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -40,6 +43,7 @@ public class PerformanceService {
 
     private final PerformancePriceRepository performancePriceRepository;
     private final PerformanceRepository performanceRepository;
+    private final BoxOfficeRankRepository boxOfficeRankRepository;
     private final PlaceRepository placeRepository;
     private final KopisService kopisService;
 
@@ -61,6 +65,8 @@ public class PerformanceService {
                 .map(PerformanceResponse::new)
                 .collect(Collectors.toList());
     }
+
+
 
     public PerformanceDetailResponse getPerformance(String id) {
         Performance performance = performanceRepository.findById(id)
@@ -140,6 +146,46 @@ public class PerformanceService {
         return updateCnt;
     }
 
+    public int updateBoxOfficeRankBatch() {
+        log.info("[Batch] Batch Updating Performance Rank...");
+        boxOfficeRankRepository.deleteAll();
+        TimePeriod[] timePeriods = TimePeriod.values();
+
+        List<CompletableFuture<BoxOfficeRank>> futures = new ArrayList<>();
+        ExecutorService executorService = Executors.newFixedThreadPool(5);
+
+        for (TimePeriod timePeriod : timePeriods) {
+            CompletableFuture<BoxOfficeRank> future = CompletableFuture.supplyAsync(() -> {
+                KopisBoxOfficeRequest kopisBoxOfficeRequest = KopisBoxOfficeRequest.builder()
+                        .ststype(timePeriod.getValue())
+                        .date(LocalDate.now().minusDays(1).format(DateTimeFormatter.ofPattern("yyyyMMdd")))
+                        .catecode("CCCD")
+                        .build();
+
+                List<KopisBoxOfficeResponse> kopisBoxOfficeResponseList = kopisService.getBoxOffice(kopisBoxOfficeRequest);
+
+                String ids = kopisBoxOfficeResponseList.stream()
+                        .filter(response -> checkIfNotCompleted(response.prfpd()))
+                        .map(KopisBoxOfficeResponse::mt20id)
+                        .collect(Collectors.joining("|"));
+
+                return BoxOfficeRank.builder()
+                        .timePeriod(timePeriod)
+                        .performanceIds(ids)
+                        .build();
+            }, executorService);
+            futures.add(future);
+        }
+
+        List<BoxOfficeRank> boxOfficeRankList = futures.stream()
+                .map(CompletableFuture::join)
+                .collect(Collectors.toList());
+
+        boxOfficeRankRepository.saveAll(boxOfficeRankList);
+        log.info("[Batch] Box Office Rank has been Updated... size : {}", boxOfficeRankList.size());
+        return boxOfficeRankList.size();
+    }
+
     private PerformanceDetailResponse getPerformanceDetailResponse(Performance performance) {
         PerformanceDetailResponse performanceDetailResponse = PerformanceMapper.INSTANCE.toPerformanceDto(performance);
         performanceDetailResponse.updateStoryUrls(performance.getStoryUrls());
@@ -165,6 +211,13 @@ public class PerformanceService {
                         .performance(performance)
                         .build())
                 .collect(Collectors.toList());
+    }
+
+    private boolean checkIfNotCompleted(String period) {
+        String strEndDate = period.contains("~") ? period.split("~")[1] : period;
+        LocalDate endDate = LocalDate.parse(strEndDate, DateTimeFormatter.ofPattern("yyyy.MM.dd"));
+        return LocalDate.now().isBefore(endDate) || LocalDate.now().isEqual(endDate);
+
     }
 
 }

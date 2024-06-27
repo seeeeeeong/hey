@@ -30,4 +30,10 @@ public class BatchController {
         int count = performanceService.updatePerformanceStatusBatch();
         return SuccessResponse.of(count).asHttp(HttpStatus.OK);
     }
+
+    @GetMapping("/performances/rank")
+    public ResponseEntity<SuccessResponse<Integer>> updateBoxOfficeRankBatch() {
+        int count = performanceService.updateBoxOfficeRankBatch();
+        return SuccessResponse.of(count).asHttp(HttpStatus.OK);
+    }
 }

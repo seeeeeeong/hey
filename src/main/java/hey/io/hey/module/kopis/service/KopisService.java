@@ -1,10 +1,7 @@
 package hey.io.hey.module.kopis.service;
 
 import hey.io.hey.module.kopis.client.KopisFeignClient;
-import hey.io.hey.module.kopis.client.dto.KopisPerformanceDetailResponse;
-import hey.io.hey.module.kopis.client.dto.KopisPerformanceRequest;
-import hey.io.hey.module.kopis.client.dto.KopisPerformanceResponse;
-import hey.io.hey.module.kopis.client.dto.KopisPlaceDetailResponse;
+import hey.io.hey.module.kopis.client.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -30,6 +27,10 @@ public class KopisService {
             throw new IllegalStateException("Fail to GET Performance Detail..");
         }
         return kopisPerformanceDetailResponse;
+    }
+
+    public List<KopisBoxOfficeResponse> getBoxOffice(KopisBoxOfficeRequest kopisBoxOfficeRequest) {
+        return kopisFeignClient.getBoxOffice(kopisBoxOfficeRequest, apiKey);
     }
 
     public KopisPlaceDetailResponse getPlaceDetail(String placeId) {

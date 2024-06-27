@@ -2,10 +2,7 @@ package hey.io.hey.module.kopis.client;
 
 
 import hey.io.hey.common.config.FeignConfig;
-import hey.io.hey.module.kopis.client.dto.KopisPerformanceDetailResponse;
-import hey.io.hey.module.kopis.client.dto.KopisPerformanceRequest;
-import hey.io.hey.module.kopis.client.dto.KopisPerformanceResponse;
-import hey.io.hey.module.kopis.client.dto.KopisPlaceDetailResponse;
+import hey.io.hey.module.kopis.client.dto.*;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,4 +22,7 @@ public interface KopisFeignClient {
 
     @GetMapping(value = "/prfplc/{placeId}", produces = "application/xml;charset=UTF-8")
     List<KopisPlaceDetailResponse> getPlaceDetail(@PathVariable("placeId") String placeId, @RequestParam("service") String apiKey);
+
+    @GetMapping(value = "/boxoffice", produces = "application/xml;charset=UTF-8")
+    List<KopisBoxOfficeResponse> getBoxOffice(@SpringQueryMap KopisBoxOfficeRequest request, @RequestParam("service") String apiKey);
 }

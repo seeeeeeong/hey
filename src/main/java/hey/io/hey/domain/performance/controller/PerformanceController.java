@@ -41,6 +41,11 @@ public class PerformanceController {
         return SuccessResponse.of(performanceService.getNewPerformances()).asHttp(HttpStatus.OK);
     }
 
+//    @GetMapping("/rank")
+//    public ResponseEntity<SuccessResponse<List<BoxOfficeRankResponse>>> getBoxOffice() {
+//        return SuccessResponse.of(performanceService.getBoxOfficeRank()).asHttp(HttpStatus.OK);
+//    }
+
     @GetMapping("/{id}")
     public ResponseEntity<SuccessResponse<PerformanceDetailResponse>> getPerformance(@PathVariable String id) {
         return SuccessResponse.of(performanceService.getPerformance(id)).asHttp(HttpStatus.OK);
