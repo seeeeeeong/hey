@@ -18,6 +18,8 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -48,6 +50,26 @@ public class FollowService {
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
         Slice<PerformanceResponse> followedPerformance = followRepository.getFollow(user.getUserId(), Pageable.ofSize(size).withPage(page), direction);
         return new SliceResponse<>(followedPerformance);
+    }
+
+    @Transactional
+    public FollowResponse deleteFollow(Long userId, String performanceId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
+
+        Performance performance = performanceRepository.findById(performanceId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.PERFORMANCE_NOT_FOUND));
+
+        Optional<Follow> userFollowPerformanceOptional = followRepository.findByUserAndPerformance(user, performance);
+
+        if (userFollowPerformanceOptional.isPresent()) {
+            Follow follow = userFollowPerformanceOptional.get();
+            followRepository.delete(follow);
+        } else {
+            throw new BusinessException(ErrorCode.FOLLOW_NOT_FOUND);
+        }
+
+        return new FollowResponse(performanceId, "UnFollow Success");
     }
 
 }

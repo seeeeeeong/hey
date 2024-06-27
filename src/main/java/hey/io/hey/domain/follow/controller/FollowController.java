@@ -34,4 +34,11 @@ public class FollowController {
                                                                                          @RequestParam(name = "direction", required = false, defaultValue = "DESC") Direction direction) {
         return SuccessResponse.of(followService.getFollow(jwtTokenInfo.getUserId(), size, page, direction)).asHttp(HttpStatus.OK);
     }
+
+    @DeleteMapping("/follow/{id}")
+    public ResponseEntity<SuccessResponse<FollowResponse>> deleteFollow(@AuthUser JwtTokenInfo jwtTokenInfo,
+                                                                        @PathVariable("id") String performanceId) {
+        return SuccessResponse.of(followService.deleteFollow(jwtTokenInfo.getUserId(), performanceId)).asHttp(HttpStatus.OK);
+    }
+
 }
