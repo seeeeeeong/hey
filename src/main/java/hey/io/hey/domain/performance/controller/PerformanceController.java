@@ -23,7 +23,7 @@ public class PerformanceController {
     private final PerformanceService performanceService;
 
     @GetMapping
-    public ResponseEntity<SuccessResponse<SliceResponse<PerformanceResponse>>> getPerformancesByCondition(@RequestBody PerformanceFilterRequest request,
+    public ResponseEntity<SuccessResponse<SliceResponse<PerformanceResponse>>> getPerformancesByCondition(PerformanceFilterRequest request,
                                                                                                           @RequestParam(value = "size", required = false, defaultValue = "20") int size,
                                                                                                           @RequestParam(value = "page", required = false, defaultValue = "0") int page,
                                                                                                           @RequestParam(name = "direction", required = false, defaultValue = "DESC") Direction direction) {
@@ -50,7 +50,7 @@ public class PerformanceController {
 
     @GetMapping("/{id}")
     public ResponseEntity<SuccessResponse<PerformanceDetailResponse>> getPerformance(@AuthUser JwtTokenInfo jwtTokenInfo,
-                                                                                     @PathVariable String id) {
-        return SuccessResponse.of(performanceService.getPerformance(id)).asHttp(HttpStatus.OK);
+                                                                                     @PathVariable("id") String performanceId) {
+        return SuccessResponse.of(performanceService.getPerformance(performanceId)).asHttp(HttpStatus.OK);
     }
 }

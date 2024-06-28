@@ -1,5 +1,7 @@
 package hey.io.hey.common.response;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import org.springframework.data.domain.Slice;
 
@@ -22,4 +24,17 @@ public class SliceResponse<T> {
         this.last = sliceContent.isLast();
     }
 
+    @JsonCreator
+    public SliceResponse(
+            @JsonProperty("content") List<T> content,
+            @JsonProperty("currentPage") int currentPage,
+            @JsonProperty("size") int size,
+            @JsonProperty("first") boolean first,
+            @JsonProperty("last") boolean last) {
+        this.content = content;
+        this.currentPage = currentPage;
+        this.size = size;
+        this.first = first;
+        this.last = last;
+    }
 }
