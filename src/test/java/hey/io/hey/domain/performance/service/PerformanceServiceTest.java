@@ -15,6 +15,8 @@ import hey.io.hey.domain.performance.repository.BoxOfficeRankRepository;
 import hey.io.hey.domain.performance.repository.PerformancePriceRepository;
 import hey.io.hey.domain.performance.repository.PerformanceRepository;
 import hey.io.hey.domain.performance.repository.PlaceRepository;
+import hey.io.hey.domain.user.domain.User;
+import hey.io.hey.domain.user.repository.UserRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -50,6 +52,9 @@ class PerformanceServiceTest {
 
     @Autowired
     private PerformancePriceRepository performancePriceRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Mock
     private KopisService kopisService;
@@ -185,6 +190,9 @@ class PerformanceServiceTest {
     @DisplayName("getPerformance - 성공")
     void getPerformance_success() {
         // given
+        User user = User.create("email", "password");
+        userRepository.save(user);
+
         double latitude = 0.1;
         double longitude = 0.2;
 
@@ -239,10 +247,13 @@ class PerformanceServiceTest {
         assertThat(result.getAddress()).isEqualTo(place.getAddress());
     }
 
+
     @Test
     @DisplayName("getPerformance - 공연을 찾을 수 없습니다.")
     void getPerformance_performanceNotFound() {
         // given
+        User user = User.create("email", "password");
+        userRepository.save(user);
         // when
         Throwable throwable = catchThrowable(() -> performanceService.getPerformance("randomId"));
 

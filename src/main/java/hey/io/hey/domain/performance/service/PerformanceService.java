@@ -17,8 +17,11 @@ import hey.io.hey.domain.performance.repository.PerformanceRepository;
 import hey.io.hey.domain.performance.domain.Place;
 import hey.io.hey.common.kopis.service.KopisService;
 import hey.io.hey.domain.performance.mapper.PerformanceMapper;
+import hey.io.hey.domain.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort.Direction;
@@ -35,6 +38,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
+import static hey.io.hey.common.config.RedisCacheKey.PERFORMANCE;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -48,8 +53,10 @@ public class PerformanceService {
     private final KopisService kopisService;
 
 
+    @Cacheable(key = "#request.statuses != null ? #request.statuses : 'null'", value = PERFORMANCE, cacheManager = "redisCacheManager")
     public SliceResponse<PerformanceResponse> getPerformancesByCondition(PerformanceFilterRequest request, int size, int page, Direction direction) {
         Slice<PerformanceResponse> performances = performanceRepository.getPerformancesByCondition(request, Pageable.ofSize(size).withPage(page), direction);
+
         return new SliceResponse<>(performances);
     }
 
@@ -79,14 +86,16 @@ public class PerformanceService {
                 .collect(Collectors.toList());
     }
 
-    public PerformanceDetailResponse getPerformance(String id) {
-        Performance performance = performanceRepository.findById(id)
+    public PerformanceDetailResponse getPerformance(String performanceId) {
+
+        Performance performance = performanceRepository.findById(performanceId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.PERFORMANCE_NOT_FOUND));
 
         return getPerformanceDetailResponse(performance);
 
     }
 
+    @CacheEvict(value = PERFORMANCE, allEntries = true)
     @Transactional
     public int updatePerformancesBatch(LocalDate from, LocalDate to, int rows) {
         log.info("[Batch] Batch Updating Performances...");

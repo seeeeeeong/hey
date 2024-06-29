@@ -1,6 +1,7 @@
 package hey.io.hey.domain.performance.repository;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
+import hey.io.hey.domain.performance.domain.Performance;
 import hey.io.hey.domain.performance.domain.enums.PerformanceStatus;
 import hey.io.hey.domain.performance.dto.PerformanceFilterRequest;
 import hey.io.hey.domain.performance.dto.PerformanceResponse;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.util.ObjectUtils;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static hey.io.hey.domain.performance.domain.QPerformance.performance;
 import static hey.io.hey.domain.performance.domain.QPerformancePrice.performancePrice;
@@ -36,16 +38,32 @@ public class PerformanceQueryRepositoryImpl implements PerformanceQueryRepositor
     public Slice<PerformanceResponse> getPerformancesByCondition(PerformanceFilterRequest request, Pageable pageable, Sort.Direction direction) {
 
         int pageSize = pageable.getPageSize();
-        List<PerformanceResponse> content = queryFactory.select(
-                new QPerformanceResponse(performance.id, performance.title, performance.startDate, performance.endDate, performance.poster, performance.theater))
-                .from(performance)
+
+        // 성능 데이터 먼저 가져오기
+        List<Performance> performances = queryFactory.selectFrom(performance)
                 .where(inStatus(request.getStatuses()))
-                .leftJoin(performancePrice)
-                .on(performancePrice.performance.eq(performance))
                 .orderBy(direction.isAscending() ? performance.createdAt.asc() : performance.createdAt.desc())
                 .offset(pageable.getOffset())
                 .limit(pageSize + 1)
                 .fetch();
+
+        // 필요한 추가 데이터를 가져와서 PerformanceResponse로 변환
+        List<PerformanceResponse> content = performances.stream()
+                .map(p -> new PerformanceResponse(p.getId(), p.getTitle(), p.getStartDate(), p.getEndDate(), p.getPoster(), p.getTheater()))
+                .distinct()
+                .collect(Collectors.toList());
+
+//        List<PerformanceResponse> content = queryFactory.select(
+//                new QPerformanceResponse(performance.id, performance.title, performance.startDate, performance.endDate, performance.poster, performance.theater))
+//                .from(performance)
+//                .where(inStatus(request.getStatuses()))
+//                .leftJoin(performancePrice)
+//                .on(performancePrice.performance.eq(performance))
+//                .orderBy(direction.isAscending() ? performance.createdAt.asc() : performance.createdAt.desc())
+//                .offset(pageable.getOffset())
+//                .limit(pageSize + 1)
+//                .distinct()
+//                .fetch();
 
         boolean hasNext = false;
         if (content.size() > pageSize) {

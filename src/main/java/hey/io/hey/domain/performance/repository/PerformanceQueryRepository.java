@@ -1,5 +1,6 @@
 package hey.io.hey.domain.performance.repository;
 
+import hey.io.hey.domain.performance.domain.Performance;
 import hey.io.hey.domain.performance.dto.PerformanceFilterRequest;
 import hey.io.hey.domain.performance.dto.PerformanceResponse;
 import hey.io.hey.domain.performance.dto.PerformanceSearchRequest;
