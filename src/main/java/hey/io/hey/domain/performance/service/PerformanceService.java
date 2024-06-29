@@ -53,7 +53,10 @@ public class PerformanceService {
     private final KopisService kopisService;
 
 
-    @Cacheable(key = "#request.statuses != null ? #request.statuses : 'null'", value = PERFORMANCE, cacheManager = "redisCacheManager")
+    @Cacheable(
+            key = "#request.statuses != null ? T(java.util.Arrays).toString(#request.statuses) : 'null' + ',' + #size + ',' + #page",
+            value = PERFORMANCE,
+            cacheManager = "redisCacheManager")
     public SliceResponse<PerformanceResponse> getPerformancesByCondition(PerformanceFilterRequest request, int size, int page, Direction direction) {
         Slice<PerformanceResponse> performances = performanceRepository.getPerformancesByCondition(request, Pageable.ofSize(size).withPage(page), direction);
 
