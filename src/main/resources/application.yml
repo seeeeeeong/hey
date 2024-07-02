@@ -48,5 +48,5 @@ logging:
 fcm:
   service-account-file: ${FIREBASE_KEY}
   topic-name: performance # topic 이름 ( topic 통신시에 필요함 )
-  project-id: heyapplication-40e61  # firebase 프로젝트 아이디 ( 필수 )
+  project-id: ${FIREBASE_ID}  # firebase 프로젝트 아이디 ( 필수 )
 
