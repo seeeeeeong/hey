@@ -1,7 +1,9 @@
 package hey.io.hey.domain.performance.service;
 
+import com.google.firebase.messaging.FirebaseMessagingException;
 import hey.io.hey.common.exception.BusinessException;
 import hey.io.hey.common.exception.ErrorCode;
+import hey.io.hey.common.fcm.service.FcmService;
 import hey.io.hey.common.kopis.client.dto.*;
 import hey.io.hey.domain.performance.domain.BoxOfficeRank;
 import hey.io.hey.domain.performance.domain.enums.TimePeriod;
@@ -51,12 +53,14 @@ public class PerformanceService {
     private final BoxOfficeRankRepository boxOfficeRankRepository;
     private final PlaceRepository placeRepository;
     private final KopisService kopisService;
+    private final FcmService fcmService;
 
 
     @Cacheable(
-            key = "#request.statuses != null ? T(java.util.Arrays).toString(#request.statuses) : 'null' + ',' + #size + ',' + #page",
-            value = PERFORMANCE,
-            cacheManager = "redisCacheManager")
+            key = "T(org.springframework.util.StringUtils).collectionToCommaDelimitedString(T(java.util.Objects).requireNonNullElse(#request.statuses, new String[] { 'null' })) + ',' + #size + ',' + #page",
+            value = "PERFORMANCE",
+            cacheManager = "redisCacheManager"
+    )
     public SliceResponse<PerformanceResponse> getPerformancesByCondition(PerformanceFilterRequest request, int size, int page, Direction direction) {
         Slice<PerformanceResponse> performances = performanceRepository.getPerformancesByCondition(request, Pageable.ofSize(size).withPage(page), direction);
 
@@ -207,6 +211,17 @@ public class PerformanceService {
         boxOfficeRankRepository.saveAll(boxOfficeRankList);
         log.info("[Batch] Box Office Rank has been Updated... size : {}", boxOfficeRankList.size());
         return boxOfficeRankList.size();
+    }
+
+    public int sendPerformancesNotification() throws FirebaseMessagingException {
+        log.info("[Batch] Batch Send Performance Notification...");
+        List<Performance> performanceList = performanceRepository.getPerformancesByStartDate();
+        int sendCnt = 0;
+        for (Performance performance : performanceList) {
+            fcmService.sendMessageByTopic(performance.getTitle(), "D-1");
+            sendCnt++;
+        }
+        return sendCnt;
     }
 
     private PerformanceDetailResponse getPerformanceDetailResponse(Performance performance) {

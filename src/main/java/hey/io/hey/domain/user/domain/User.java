@@ -35,6 +35,9 @@ public class User extends BaseEntityWithUpdate {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Follow> followingList;
 
+    @Column
+    private String fcmToken;
+
     @Builder(access = AccessLevel.PRIVATE)
     private User(String email, String password) {
         this.email = email;
@@ -46,5 +49,9 @@ public class User extends BaseEntityWithUpdate {
                 .email(email)
                 .password(password)
                 .build();
+    }
+
+    public void updateFcmToken(String fcmToken) {
+        this.fcmToken = fcmToken;
     }
 }

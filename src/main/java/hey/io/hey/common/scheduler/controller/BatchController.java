@@ -1,5 +1,7 @@
 package hey.io.hey.common.scheduler.controller;
 
+import com.google.api.Http;
+import com.google.firebase.messaging.FirebaseMessagingException;
 import hey.io.hey.common.response.SuccessResponse;
 import hey.io.hey.common.scheduler.dto.PerformanceBatchUpdateRequest;
 import hey.io.hey.domain.performance.service.PerformanceService;
@@ -34,6 +36,12 @@ public class BatchController {
     @GetMapping("/performances/rank")
     public ResponseEntity<SuccessResponse<Integer>> updateBoxOfficeRankBatch() {
         int count = performanceService.updateBoxOfficeRankBatch();
+        return SuccessResponse.of(count).asHttp(HttpStatus.OK);
+    }
+
+    @GetMapping("/performances/notification")
+    public ResponseEntity<SuccessResponse<Integer>> sendPerformancesNotification() throws FirebaseMessagingException {
+        int count = performanceService.sendPerformancesNotification();
         return SuccessResponse.of(count).asHttp(HttpStatus.OK);
     }
 }

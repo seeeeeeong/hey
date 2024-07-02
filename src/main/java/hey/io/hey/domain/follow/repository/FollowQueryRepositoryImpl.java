@@ -24,7 +24,7 @@ public class FollowQueryRepositoryImpl implements FollowQueryRepository{
         int pageSize = pageable.getPageSize();
         List<PerformanceResponse> content = queryFactory.select(
                 new QPerformanceResponse(follow.performance.id, follow.performance.title, follow.performance.startDate, follow.performance.endDate,
-                                        follow.performance.poster, follow.performance.theater, follow.performance.createdAt))
+                                        follow.performance.poster, follow.performance.theater, follow.performance.status, follow.performance.createdAt))
                 .from(follow)
                 .where(follow.user.userId.eq(userId))
                 .orderBy(direction.isAscending() ? follow.createdAt.asc() : follow.createdAt.desc())

@@ -2,6 +2,7 @@ package hey.io.hey.domain.performance.repository;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import hey.io.hey.domain.performance.domain.Performance;
 import hey.io.hey.domain.performance.domain.enums.PerformanceStatus;
 import hey.io.hey.domain.performance.dto.PerformanceFilterRequest;
 import hey.io.hey.domain.performance.dto.PerformanceResponse;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.SliceImpl;
 import org.springframework.data.domain.Sort;
 import org.springframework.util.ObjectUtils;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static hey.io.hey.domain.performance.domain.QPerformance.performance;
@@ -38,7 +40,7 @@ public class PerformanceQueryRepositoryImpl implements PerformanceQueryRepositor
         int pageSize = pageable.getPageSize();
 
         List<PerformanceResponse> content = queryFactory.select(
-                new QPerformanceResponse(performance.id, performance.title, performance.startDate, performance.endDate, performance.poster, performance.theater, performance.createdAt)).distinct()
+                new QPerformanceResponse(performance.id, performance.title, performance.startDate, performance.endDate, performance.poster, performance.theater, performance.status, performance.createdAt)).distinct()
                 .from(performance)
                 .where(inStatus(request.getStatuses()))
                 .leftJoin(performancePrice)
@@ -61,7 +63,7 @@ public class PerformanceQueryRepositoryImpl implements PerformanceQueryRepositor
     public Slice<PerformanceResponse> searchPerformances(PerformanceSearchRequest request, Pageable pageable, Sort.Direction direction) {
         int pageSize = pageable.getPageSize();
         List<PerformanceResponse> content = queryFactory.select(
-                        new QPerformanceResponse(performance.id, performance.title, performance.startDate, performance.endDate, performance.poster, performance.theater, performance.createdAt))
+                        new QPerformanceResponse(performance.id, performance.title, performance.startDate, performance.endDate, performance.poster, performance.theater, performance.status, performance.createdAt))
                 .from(performance)
                 .where(performance.title.contains(request.getKeyword()))
                 .leftJoin(performancePrice)
@@ -78,6 +80,14 @@ public class PerformanceQueryRepositoryImpl implements PerformanceQueryRepositor
         }
 
         return new SliceImpl<>(content, pageable, hasNext);
+    }
+
+    @Override
+    public List<Performance> getPerformancesByStartDate() {
+
+        return queryFactory.selectFrom(performance)
+                .where(performance.startDate.eq(LocalDate.now().plusDays(4)))
+                .fetch();
     }
 
     private BooleanExpression inStatus(List<PerformanceStatus> statuses) {

@@ -1,5 +1,6 @@
 package hey.io.hey.common.scheduler;
 
+import com.google.firebase.messaging.FirebaseMessagingException;
 import hey.io.hey.domain.performance.service.PerformanceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,5 +30,8 @@ public class BatchScheduler {
         performanceService.updatePerformanceStatusBatch();
     }
 
-
+    @Scheduled(cron = "0 0 0 * * *")
+    public void sendPerformancesNotification() throws FirebaseMessagingException {
+        performanceService.sendPerformancesNotification();
+    }
 }

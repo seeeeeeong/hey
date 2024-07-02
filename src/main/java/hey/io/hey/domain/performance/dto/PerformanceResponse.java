@@ -9,6 +9,7 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.querydsl.core.annotations.QueryProjection;
 import hey.io.hey.domain.performance.domain.Performance;
+import hey.io.hey.domain.performance.domain.enums.PerformanceStatus;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,6 +36,7 @@ public class PerformanceResponse {
     private LocalDate endDate;
     private String theater;
     private String poster;
+    private PerformanceStatus status;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonSerialize(using = LocalDateTimeSerializer.class)
@@ -43,13 +45,14 @@ public class PerformanceResponse {
 
 
     @QueryProjection
-    public PerformanceResponse(String id, String title, LocalDate startDate, LocalDate endDate, String theater, String poster, LocalDateTime createdAt) {
+    public PerformanceResponse(String id, String title, LocalDate startDate, LocalDate endDate, String theater, String poster, PerformanceStatus status, LocalDateTime createdAt) {
         this.id = id;
         this.title = title;
         this.startDate = startDate;
         this.endDate = endDate;
         this.theater = theater;
         this.poster = poster;
+        this.status = status;
         this.createdAt = createdAt;
     }
 
@@ -60,6 +63,7 @@ public class PerformanceResponse {
         this.endDate = performance.getEndDate();
         this.theater = performance.getTheater();
         this.poster = performance.getPoster();
+        this.status = performance.getStatus();
         this.createdAt = performance.getCreatedAt();
     }
 
