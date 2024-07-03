@@ -12,6 +12,9 @@ import java.time.LocalDate;
 
 @Getter
 @Entity
+@Table(name = "performance", indexes = {
+        @Index(name = "idx_performance_id", columnList = "id")
+})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Performance extends BaseEntityWithUpdate {
 
