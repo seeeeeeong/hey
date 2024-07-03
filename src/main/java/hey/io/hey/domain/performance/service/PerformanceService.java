@@ -170,8 +170,9 @@ public class PerformanceService {
         List<String> allIdList = performanceRepository.findAllIds();
         HashSet<String> allIdSet = new HashSet<>(allIdList);
 
-        ExecutorService executorService = Executors.newFixedThreadPool(5);
         List<CompletableFuture<Void>> futures = new ArrayList<>();
+        ExecutorService executorService = Executors.newFixedThreadPool(5);
+
 
         List<Performance> newPerformances = new ArrayList<>();
 
@@ -277,6 +278,9 @@ public class PerformanceService {
                 .collect(Collectors.toList());
 
         boxOfficeRankRepository.saveAll(boxOfficeRankList);
+
+        executorService.shutdown();
+
         long endTime = System.currentTimeMillis();
         long duration = endTime - startTime;
         log.info("[Batch] Box Office Rank has been Updated... size : {}, Duration: {} ms", boxOfficeRankList.size(), duration);
