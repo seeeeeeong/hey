@@ -10,6 +10,7 @@ import hey.io.hey.domain.performance.domain.Performance;
 import hey.io.hey.domain.performance.domain.enums.PerformanceStatus;
 import hey.io.hey.domain.performance.dto.PerformanceResponse;
 import hey.io.hey.domain.performance.repository.PerformanceRepository;
+import hey.io.hey.domain.user.domain.SocialCode;
 import hey.io.hey.domain.user.domain.User;
 import hey.io.hey.domain.user.repository.UserRepository;
 import org.assertj.core.api.Assertions;
@@ -61,7 +62,7 @@ class FollowServiceTest {
     @DisplayName("follow - 성공")
     void follow_success() {
         // given
-        User user = User.create("email", "password");
+        User user = User.create("email", SocialCode.GOOGLE);
         userRepository.save(user);
         Performance performance1 = createPerformance("1");
         performanceRepository.save(performance1);
@@ -78,7 +79,7 @@ class FollowServiceTest {
     @DisplayName("follow - 유저를 찾을 수 없습니다.")
     void follow_userNotFound() {
         // given
-        User user = User.create("email", "password");
+        User user = User.create("email", SocialCode.GOOGLE);
         userRepository.save(user);        Performance performance1 = createPerformance("1");
         performanceRepository.save(performance1);
 
@@ -93,7 +94,7 @@ class FollowServiceTest {
     @DisplayName("follow - 공연을 찾을 수 없습니다.")
     void follow_performanceNotFound() {
         // given
-        User user = User.create("email", "password");
+        User user = User.create("email", SocialCode.GOOGLE);
         userRepository.save(user);
         Performance performance1 = createPerformance("1");
         performanceRepository.save(performance1);
@@ -109,7 +110,7 @@ class FollowServiceTest {
     @DisplayName("follow - 이미 팔로우한 공연입니다.")
     void follow_alreadyFollowedPerformance() {
         // given
-        User user = User.create("email", "password");
+        User user = User.create("email", SocialCode.GOOGLE);
         userRepository.save(user);
         Performance performance1 = createPerformance("1");
         performanceRepository.save(performance1);
@@ -127,7 +128,7 @@ class FollowServiceTest {
     @DisplayName("getFollow - 성공")
     void getFollow_success() {
         // given
-        User user = User.create("email", "password");
+        User user = User.create("email", SocialCode.GOOGLE);
         userRepository.save(user);
         Performance performance1 = createPerformance("1");
         performanceRepository.save(performance1);
@@ -147,7 +148,7 @@ class FollowServiceTest {
     @DisplayName("getFollow - 유저를 찾을 수 없습니다.")
     void getFollow_userNotFound() {
         // given
-        User user = User.create("email", "password");
+        User user = User.create("email", SocialCode.GOOGLE);
         userRepository.save(user);
         Performance performance1 = createPerformance("1");
         performanceRepository.save(performance1);
@@ -165,7 +166,7 @@ class FollowServiceTest {
     @DisplayName("deleteFollow - 성공")
     void deleteFollow_success() {
         // given
-        User user = User.create("email", "password");
+        User user = User.create("email", SocialCode.GOOGLE);
         userRepository.save(user);
         Performance performance1 = createPerformance("1");
         performanceRepository.save(performance1);
@@ -184,9 +185,9 @@ class FollowServiceTest {
     @DisplayName("deleteFollow - 유저를 찾을 수 없습니다.")
     void deleteFollow_userNotFound() {
         // given
-        User user1 = User.create("email", "password");
+        User user1 = User.create("email", SocialCode.GOOGLE);
         userRepository.save(user1);
-        User user2 = User.create("email2", "password");
+        User user2 = User.create("email2", SocialCode.GOOGLE);
         userRepository.save(user2);
         Performance performance1 = createPerformance("1");
         performanceRepository.save(performance1);
@@ -204,7 +205,7 @@ class FollowServiceTest {
     @DisplayName("deleteFollow - 공연을 찾을 수 없습니다.")
     void deleteFollow_performanceNotFound() {
         // given
-        User user = User.create("email", "password");
+        User user = User.create("email", SocialCode.GOOGLE);
         userRepository.save(user);
         Performance performance1 = createPerformance("1");
         performanceRepository.save(performance1);
@@ -222,7 +223,7 @@ class FollowServiceTest {
     @DisplayName("deleteFollow - 팔로잉을 찾을 수 없습니다.")
     void deleteFollow_followNotFound() {
         // given
-        User user = User.create("email", "password");
+        User user = User.create("email", SocialCode.GOOGLE);
         userRepository.save(user);
         Performance performance1 = createPerformance("1");
         performanceRepository.save(performance1);

@@ -2,8 +2,8 @@ package hey.io.hey.domain.performance.service;
 
 import hey.io.hey.common.config.QuerydslConfig;
 import hey.io.hey.common.exception.BusinessException;
-import hey.io.hey.common.fcm.service.FcmService;
-import hey.io.hey.common.kopis.service.KopisService;
+import hey.io.hey.domain.fcm.service.FcmService;
+import hey.io.hey.domain.kopis.service.KopisService;
 import hey.io.hey.common.response.SliceResponse;
 import hey.io.hey.domain.performance.domain.BoxOfficeRank;
 import hey.io.hey.domain.performance.domain.Performance;
@@ -16,6 +16,7 @@ import hey.io.hey.domain.performance.repository.BoxOfficeRankRepository;
 import hey.io.hey.domain.performance.repository.PerformancePriceRepository;
 import hey.io.hey.domain.performance.repository.PerformanceRepository;
 import hey.io.hey.domain.performance.repository.PlaceRepository;
+import hey.io.hey.domain.user.domain.SocialCode;
 import hey.io.hey.domain.user.domain.User;
 import hey.io.hey.domain.user.repository.UserRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -195,7 +196,7 @@ class PerformanceServiceTest {
     @DisplayName("getPerformance - 성공")
     void getPerformance_success() {
         // given
-        User user = User.create("email", "password");
+        User user = User.create("email", SocialCode.GOOGLE);
         userRepository.save(user);
 
         double latitude = 0.1;
@@ -257,7 +258,7 @@ class PerformanceServiceTest {
     @DisplayName("getPerformance - 공연을 찾을 수 없습니다.")
     void getPerformance_performanceNotFound() {
         // given
-        User user = User.create("email", "password");
+        User user = User.create("email", SocialCode.GOOGLE);
         userRepository.save(user);
         // when
         Throwable throwable = catchThrowable(() -> performanceService.getPerformance("randomId"));

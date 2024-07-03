@@ -8,12 +8,15 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Where;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 @Getter
 @Table(name = "\"user\"")
+@Where(clause = "deleted_at is null")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends BaseEntityWithUpdate {
 
@@ -25,33 +28,38 @@ public class User extends BaseEntityWithUpdate {
     @Column(nullable = false)
     private String email;
 
-    @NotNull
-    @Column(nullable = false)
-    private String password;
-
     @Enumerated(EnumType.STRING)
     private UserRole userRole = UserRole.USER;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private SocialCode socialCode;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Follow> followingList;
 
-    @Column
-    private String fcmToken;
+    private LocalDateTime deletedAt;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private User(String email, String password) {
+    private User(String email, SocialCode socialCode) {
         this.email = email;
-        this.password = password;
+        this.socialCode = socialCode;
     }
 
-    public static User create(String email, String password) {
+    public static User create(String email, SocialCode socialCode) {
         return User.builder()
                 .email(email)
-                .password(password)
+                .socialCode(socialCode)
                 .build();
     }
 
-    public void updateFcmToken(String fcmToken) {
-        this.fcmToken = fcmToken;
+    public void deleteUser() {
+        this.deletedAt = LocalDateTime.now();
     }
+
+    public boolean isAdmin() {
+        return this.userRole == UserRole.ADMIN;
+    }
+
 }
