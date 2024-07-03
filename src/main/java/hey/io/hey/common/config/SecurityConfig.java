@@ -31,7 +31,9 @@ public class SecurityConfig {
             "/performances/search",
             "/performances/new",
             "/performances/rank",
+            "/performances/notification",
             "/batch/**",
+            "/message/**",
             "/h2-console/**"
     };
 

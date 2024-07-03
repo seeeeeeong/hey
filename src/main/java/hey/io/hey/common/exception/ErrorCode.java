@@ -29,7 +29,13 @@ public enum ErrorCode {
     PLACE_NOT_FOUND(404, "PL001", "장소를 찾을 수 없습니다."),
 
     // FOLLOW
-    FOLLOW_NOT_FOUND(404, "F001", "팔로잉을 찾을 수 없습니다.");
+    FOLLOW_NOT_FOUND(404, "F001", "팔로잉을 찾을 수 없습니다."),
+
+    // FCM
+    FAILED_SEND_TOPIC(500, "FC001", "TOPIC 전송에 실패했습니다."),
+    FCM_TOKEN_NOT_FOUND(404, "FC002", "FCM token이 없습니다."),
+    FAILED_SUBSCRIBE_TOPIC(500, "FC003", "TOPIC 구독에 실패했습니다."),
+    UNFAILED_SUBSCRIBE_TOPIC(500, "FC003", "TOPIC 구독취소에 실패했습니다.");
 
     private final int status;
     private final String code;

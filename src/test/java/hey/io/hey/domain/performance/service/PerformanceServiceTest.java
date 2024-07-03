@@ -2,6 +2,7 @@ package hey.io.hey.domain.performance.service;
 
 import hey.io.hey.common.config.QuerydslConfig;
 import hey.io.hey.common.exception.BusinessException;
+import hey.io.hey.common.fcm.service.FcmService;
 import hey.io.hey.common.kopis.service.KopisService;
 import hey.io.hey.common.response.SliceResponse;
 import hey.io.hey.domain.performance.domain.BoxOfficeRank;
@@ -59,9 +60,12 @@ class PerformanceServiceTest {
     @Mock
     private KopisService kopisService;
 
+    @Mock
+    private FcmService fcmService;
+
     @BeforeEach
     void init() {
-        performanceService = new PerformanceService(performancePriceRepository, performanceRepository, boxOfficeRankRepository, placeRepository, kopisService);
+        performanceService = new PerformanceService(performancePriceRepository, performanceRepository, boxOfficeRankRepository, placeRepository, kopisService, fcmService);
     }
 
     @AfterEach
@@ -69,6 +73,7 @@ class PerformanceServiceTest {
         boxOfficeRankRepository.deleteAll();
         performanceRepository.deleteAll();
         performancePriceRepository.deleteAll();;
+        userRepository.deleteAll();
     }
 
     @Test
