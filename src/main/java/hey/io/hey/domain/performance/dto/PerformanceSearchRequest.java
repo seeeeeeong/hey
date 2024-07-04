@@ -16,5 +16,5 @@ public class PerformanceSearchRequest {
     @NotBlank
     private String keyword;
     private List<PerformanceStatus> statuses = new ArrayList<>();
-    
+
 }

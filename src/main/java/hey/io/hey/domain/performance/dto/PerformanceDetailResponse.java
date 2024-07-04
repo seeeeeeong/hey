@@ -36,7 +36,7 @@ public class PerformanceDetailResponse {
     private String age;
     private String price;
     private String poster;
-    private boolean visit;
+    private Boolean visit;
     private PerformanceStatus status;
     private List<String> storyUrls;
     private String schedule;
