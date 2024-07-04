@@ -16,6 +16,7 @@ import static hey.io.hey.common.exception.ErrorCode.INTERNAL_SERVER_ERROR;
 public class OAuthService {
 
     private final GoogleOAuthService googleOAuthService;
+    private final AppleOAuthService appleOAuthService;
     private final ValidateUserService validateUserService;
 
     @Transactional
@@ -23,8 +24,9 @@ public class OAuthService {
         User user = validateUserService.validateUserById(userId);
         if (user.getSocialCode() == SocialCode.GOOGLE) {
             googleOAuthService.deleteAccount(user);
-        }
-         else {
+        } else if (user.getSocialCode() == SocialCode.APPLE) {
+            appleOAuthService.deleteAccount(user);
+        } else {
             throw new BusinessException(INTERNAL_SERVER_ERROR);
         }
     }

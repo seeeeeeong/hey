@@ -5,6 +5,7 @@ import hey.io.hey.common.exception.ErrorCode;
 import hey.io.hey.common.security.jwt.JwtTokenProvider;
 import hey.io.hey.common.security.jwt.dto.JwtTokenResponse;
 import hey.io.hey.domain.oauth.domain.Auth;
+import hey.io.hey.domain.oauth.dto.AppleIdToken;
 import hey.io.hey.domain.oauth.repository.AuthRepository;
 import hey.io.hey.domain.user.domain.SocialCode;
 import hey.io.hey.domain.user.domain.User;
@@ -23,6 +24,30 @@ public class UserService {
 
     @Transactional
     public User registerGoogleUser(String email, SocialCode socialCode, String refreshToken) {
+        User user = userRepository.save(User.create(email, socialCode));
+        Auth auth = Auth.builder()
+                .user(user)
+                .refreshToken(refreshToken)
+                .build();
+        authRepository.save(auth);
+        return user;
+    }
+
+    @Transactional
+    public User registerAppleUser(AppleIdToken appleIdToken, String refreshToken) {
+        User user = userRepository.save(User.create(appleIdToken.getEmail(), SocialCode.APPLE));
+        Auth auth = Auth.builder()
+                .user(user)
+                .idToken(appleIdToken.toString())
+                .sub(appleIdToken.getSub())
+                .refreshToken(refreshToken)
+                .build();
+        authRepository.save(auth);
+        return user;
+    }
+
+    @Transactional
+    public User registerKakaoUser(String email,SocialCode socialCode, String refreshToken) {
         User user = userRepository.save(User.create(email, socialCode));
         Auth auth = Auth.builder()
                 .user(user)

@@ -54,7 +54,10 @@ public enum ErrorCode {
     FAILED_SEND_TOPIC(500, "FC001", "TOPIC 전송에 실패했습니다."),
     FCM_TOKEN_NOT_FOUND(404, "FC002", "FCM token이 없습니다."),
     FAILED_SUBSCRIBE_TOPIC(500, "FC003", "TOPIC 구독에 실패했습니다."),
-    UNFAILED_SUBSCRIBE_TOPIC(500, "FC003", "TOPIC 구독취소에 실패했습니다.");
+    UNFAILED_SUBSCRIBE_TOPIC(500, "FC003", "TOPIC 구독취소에 실패했습니다."),
+
+    // Apple
+    APPLE_EMAIL_NOT_FOUND(400, "A001", "애플 소셜서버로부터 이메일을 받지 못했습니다.");
 
     private final int status;
     private final String code;

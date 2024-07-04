@@ -2,7 +2,6 @@ package hey.io.hey.domain.kopis.client;
 
 
 import hey.io.hey.common.config.FeignConfig;
-import hey.io.hey.common.kopis.client.dto.*;
 import hey.io.hey.domain.kopis.client.dto.*;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.SpringQueryMap;
