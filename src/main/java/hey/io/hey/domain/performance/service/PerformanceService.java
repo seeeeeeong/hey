@@ -3,8 +3,8 @@ package hey.io.hey.domain.performance.service;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import hey.io.hey.common.exception.BusinessException;
 import hey.io.hey.common.exception.ErrorCode;
-import hey.io.hey.common.fcm.service.FcmService;
-import hey.io.hey.common.kopis.client.dto.*;
+import hey.io.hey.domain.fcm.service.FcmService;
+import hey.io.hey.domain.kopis.client.dto.*;
 import hey.io.hey.domain.performance.domain.BoxOfficeRank;
 import hey.io.hey.domain.performance.domain.enums.TimePeriod;
 import hey.io.hey.domain.performance.repository.BoxOfficeRankRepository;
@@ -17,11 +17,11 @@ import hey.io.hey.domain.performance.domain.Performance;
 import hey.io.hey.domain.performance.dto.*;
 import hey.io.hey.domain.performance.repository.PerformanceRepository;
 import hey.io.hey.domain.performance.domain.Place;
-import hey.io.hey.common.kopis.service.KopisService;
+import hey.io.hey.domain.kopis.service.KopisService;
 import hey.io.hey.domain.performance.mapper.PerformanceMapper;
-import hey.io.hey.domain.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
@@ -54,6 +54,7 @@ public class PerformanceService {
     private final PlaceRepository placeRepository;
     private final KopisService kopisService;
     private final FcmService fcmService;
+    private final CacheManager cacheManager;
 
 
     @Cacheable(
@@ -102,61 +103,14 @@ public class PerformanceService {
 
     }
 
-//    @CacheEvict(value = PERFORMANCE, allEntries = true)
-//    @Transactional
-//    public int updatePerformancesBatch(LocalDate from, LocalDate to, int rows) {
-//        long startTime = System.currentTimeMillis();
-//
-//        log.info("[Batch] Batch Updating Performances...");
-//        KopisPerformanceRequest kopisPerformanceRequest = KopisPerformanceRequest.builder()
-//                .stdate(from.format(DateTimeFormatter.ofPattern("yyyyMMdd")))
-//                .eddate(to.format(DateTimeFormatter.ofPattern("yyyyMMdd")))
-//                .cpage(1)
-//                .rows(rows)
-//                .shcate("CCCD")
-//                .build();
-//
-//        List<KopisPerformanceResponse> kopisPerformanceResponseList = kopisService.getPerformances(kopisPerformanceRequest);
-//
-//        List<String> allIdList = performanceRepository.findAllIds();
-//        HashSet<String> allIdSet = new HashSet<>(allIdList);
-//
-//        List<Performance> newPerformances = new ArrayList<>();
-//
-//        for (KopisPerformanceResponse kopisPerformanceResponse : kopisPerformanceResponseList) {
-//            String performanceId = kopisPerformanceResponse.mt20id();
-//            if (!allIdSet.contains(performanceId)) {
-//                KopisPerformanceDetailResponse kopisPerformanceDetailResponse = kopisService.getPerformanceDetail(performanceId);
-//                Performance performance = kopisPerformanceDetailResponse.toEntity();
-//                String placeId = kopisPerformanceDetailResponse.mt10id();
-//                KopisPlaceDetailResponse kopisPlaceDetailResponse = kopisService.getPlaceDetail(placeId);
-//                Place place = kopisPlaceDetailResponse.toEntity();
-//                placeRepository.save(place);
-//                performance.updatePlace(place);
-//                newPerformances.add(performance);
-//            }
-//        }
-//
-//        List<Performance> performances = performanceRepository.saveAll(newPerformances);
-//        List<PerformancePrice> performancePrices = performances.stream()
-//                .filter(performance -> StringUtils.hasText(performance.getPrice()))
-//                .flatMap(performance -> getPerformancePrice(performance).stream())
-//                .collect(Collectors.toList());
-//
-//        performancePriceRepository.saveAll(performancePrices);
-//        long endTime = System.currentTimeMillis();
-//        long duration = endTime - startTime;
-//        log.info("[Batch] Performance has been Updated... Total Size: {}, New Performances Size: {}, Duration: {} ms", kopisPerformanceResponseList.size(), newPerformances.size(), duration);
-//
-//        return performances.size();
-//    }
-
     @CacheEvict(value = PERFORMANCE, allEntries = true)
     @Transactional
     public int updatePerformancesBatch(LocalDate from, LocalDate to, int rows) {
         long startTime = System.currentTimeMillis();
 
         log.info("[Batch] Batch Updating Performances...");
+        logCacheState();
+
         KopisPerformanceRequest kopisPerformanceRequest = KopisPerformanceRequest.builder()
                 .stdate(from.format(DateTimeFormatter.ofPattern("yyyyMMdd")))
                 .eddate(to.format(DateTimeFormatter.ofPattern("yyyyMMdd")))
@@ -211,6 +165,11 @@ public class PerformanceService {
         log.info("[Batch] Performance has been Updated... Total Size: {}, New Performances Size: {}, Duration: {} ms", kopisPerformanceResponseList.size(), newPerformances.size(), duration);
 
         return performances.size();
+    }
+
+    private void logCacheState() {
+        cacheManager.getCache("PERFORMANCE").clear();
+        log.info("Cache 'PERFORMANCE' has been cleared.");
     }
 
 
@@ -286,43 +245,6 @@ public class PerformanceService {
         log.info("[Batch] Box Office Rank has been Updated... size : {}, Duration: {} ms", boxOfficeRankList.size(), duration);
         return boxOfficeRankList.size();
     }
-
-//    public int updateBoxOfficeRankBatch() {
-//        long startTime = System.currentTimeMillis();
-//        log.info("[Batch] Batch Updating Performance Rank...");
-//        boxOfficeRankRepository.deleteAll();
-//        TimePeriod[] timePeriods = TimePeriod.values();
-//
-//        List<BoxOfficeRank> boxOfficeRankList = new ArrayList<>();
-//
-//        for (TimePeriod timePeriod : timePeriods) {
-//            KopisBoxOfficeRequest kopisBoxOfficeRequest = KopisBoxOfficeRequest.builder()
-//                    .ststype(timePeriod.getValue())
-//                    .date(LocalDate.now().minusDays(1).format(DateTimeFormatter.ofPattern("yyyyMMdd")))
-//                    .catecode("CCCD")
-//                    .build();
-//
-//            List<KopisBoxOfficeResponse> kopisBoxOfficeResponseList = kopisService.getBoxOffice(kopisBoxOfficeRequest);
-//
-//            String ids = kopisBoxOfficeResponseList.stream()
-//                    .filter(response -> checkIfNotCompleted(response.prfpd()))
-//                    .map(KopisBoxOfficeResponse::mt20id)
-//                    .collect(Collectors.joining("|"));
-//
-//            BoxOfficeRank boxOfficeRank = BoxOfficeRank.builder()
-//                    .timePeriod(timePeriod)
-//                    .performanceIds(ids)
-//                    .build();
-//
-//            boxOfficeRankList.add(boxOfficeRank);
-//        }
-//
-//        boxOfficeRankRepository.saveAll(boxOfficeRankList);
-//        long endTime = System.currentTimeMillis();
-//        long duration = endTime - startTime;
-//        log.info("[Batch] Box Office Rank has been Updated... size : {}, Duration: {} ms", boxOfficeRankList.size(), duration);
-//        return boxOfficeRankList.size();
-//    }
 
 
     public int sendPerformancesNotification() throws FirebaseMessagingException {

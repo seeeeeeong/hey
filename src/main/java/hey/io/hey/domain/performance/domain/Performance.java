@@ -33,6 +33,7 @@ public class Performance extends BaseEntityWithUpdate {
     private String age;
     private String price;
     private String poster;
+    private boolean visit;
     @Enumerated(EnumType.STRING)
     private PerformanceStatus status;
     @Column(name = "story_urls", columnDefinition = "TEXT")
@@ -42,7 +43,7 @@ public class Performance extends BaseEntityWithUpdate {
     @Builder(toBuilder = true)
     private Performance(String id, Place place, String title, LocalDate startDate, LocalDate endDate,
                         String theater, String cast, String runtime, String age, String price,
-                        String poster, PerformanceStatus status, String storyUrls, String schedule) {
+                        String poster, boolean visit, PerformanceStatus status, String storyUrls, String schedule) {
         this.id = id;
         this.place = place;
         this.title = title;
@@ -54,6 +55,7 @@ public class Performance extends BaseEntityWithUpdate {
         this.age = age;
         this.price = price;
         this.poster = poster;
+        this.visit = visit;
         this.status = status;
         this.storyUrls = storyUrls;
         this.schedule = schedule;
