@@ -80,7 +80,7 @@ public class PerformanceQueryRepositoryImpl implements PerformanceQueryRepositor
         List<PerformanceResponse> content = queryFactory.select(
                         new QPerformanceResponse(performance.id, performance.title, performance.startDate, performance.endDate, performance.poster, performance.theater, performance.status, performance.createdAt))
                 .from(performance)
-                .where(performance.title.contains(request.getKeyword()))
+                .where(performance.title.contains(request.getKeyword()).and(inStatus(request.getStatuses())))
                 .leftJoin(performancePrice)
                 .on(performancePrice.performance.eq(performance))
                 .orderBy(direction.isAscending() ? performance.createdAt.asc() : performance.createdAt.desc())
