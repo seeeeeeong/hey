@@ -18,7 +18,7 @@ public interface KopisFeignClient {
     List<KopisPerformanceResponse> getPerformances(@SpringQueryMap KopisPerformanceRequest request, @RequestParam("service") String apiKey);
 
     @GetMapping(value = "/pblprfr/{performanceId}", produces = "application/xml;charset=UTF-8")
-    List<KopisPerformanceDetailResponse> getPerformanceDetail(@PathVariable("performanceId") String performanceId, @RequestParam("service") String apiKey);
+    List<KopisPerformanceDetailResponse> getPerformanceDetail(@PathVariable("performanceId") String performanceId, @RequestParam("service") String apiKey, @RequestParam("newsql") String newsqlValue);
 
     @GetMapping(value = "/prfplc/{placeId}", produces = "application/xml;charset=UTF-8")
     List<KopisPlaceDetailResponse> getPlaceDetail(@PathVariable("placeId") String placeId, @RequestParam("service") String apiKey);

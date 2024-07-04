@@ -18,8 +18,7 @@ public record KopisPerformanceDetailResponse(
         String prfage, // 공연 관람 연령
         String pcseguidance, // 티켓 가격
         String poster, // 포스터 이미지경로
-
-        boolean visit, // 국내, 내한
+        String visit, // 국내, 내한
         String prfstate, // 공연 상태
         String[] styurls, // 소개이미지 목록
         String dtguidance // 공연 시간
@@ -38,7 +37,7 @@ public record KopisPerformanceDetailResponse(
                 .price(this.pcseguidance.equals(" ") ? null : this.pcseguidance)
                 .poster(this.poster.equals(" ") ? null : this.poster)
                 .schedule(this.dtguidance.equals(" ") ? null : this.dtguidance)
-                .visit(this.visit)
+                .visit(this.visit.equals("Y"))
                 .status(PerformanceStatus.getByName(this.prfstate))
                 .storyUrls(
                         this.styurls != null ?

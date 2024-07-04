@@ -58,7 +58,7 @@ public class PerformanceService {
 
 
     @Cacheable(
-            key = "T(org.springframework.util.StringUtils).collectionToCommaDelimitedString(T(java.util.Objects).requireNonNullElse(#request.statuses, new String[] { 'null' })) + ',' + #size + ',' + #page",
+            key = "T(hey.io.hey.common.config.CacheKeyGenerator).generateKey(#request.statuses, #size, #page, #request.visit)",
             value = "PERFORMANCE",
             cacheManager = "redisCacheManager"
     )

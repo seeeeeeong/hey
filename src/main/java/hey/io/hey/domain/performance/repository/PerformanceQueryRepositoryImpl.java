@@ -1,5 +1,6 @@
 package hey.io.hey.domain.performance.repository;
 
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import hey.io.hey.domain.performance.domain.Performance;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
 import org.springframework.data.domain.Sort;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -36,13 +38,26 @@ public class PerformanceQueryRepositoryImpl implements PerformanceQueryRepositor
 
     @Override
     public Slice<PerformanceResponse> getPerformancesByCondition(PerformanceFilterRequest request, Pageable pageable, Sort.Direction direction) {
+        BooleanBuilder builder = new BooleanBuilder();
 
         int pageSize = pageable.getPageSize();
+
+        if (!StringUtils.isEmpty(request.getVisit())) {
+            switch (request.getVisit()) {
+                case "y":
+                    builder.and(performance.visit.isTrue());
+                    break;
+                case "n":
+                    builder.and(performance.visit.isFalse());
+                    break;
+                default:
+            }
+        }
 
         List<PerformanceResponse> content = queryFactory.select(
                 new QPerformanceResponse(performance.id, performance.title, performance.startDate, performance.endDate, performance.poster, performance.theater, performance.status, performance.createdAt)).distinct()
                 .from(performance)
-                .where(inStatus(request.getStatuses()))
+                .where(builder.and(inStatus(request.getStatuses())))
                 .leftJoin(performancePrice)
                 .on(performancePrice.performance.eq(performance))
                 .orderBy(direction.isAscending() ? performance.createdAt.asc() : performance.createdAt.desc())
@@ -65,7 +80,7 @@ public class PerformanceQueryRepositoryImpl implements PerformanceQueryRepositor
         List<PerformanceResponse> content = queryFactory.select(
                         new QPerformanceResponse(performance.id, performance.title, performance.startDate, performance.endDate, performance.poster, performance.theater, performance.status, performance.createdAt))
                 .from(performance)
-                .where(performance.title.contains(request.getKeyword()))
+                .where(performance.title.contains(request.getKeyword()).and(inStatus(request.getStatuses())))
                 .leftJoin(performancePrice)
                 .on(performancePrice.performance.eq(performance))
                 .orderBy(direction.isAscending() ? performance.createdAt.asc() : performance.createdAt.desc())

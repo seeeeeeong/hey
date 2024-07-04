@@ -27,6 +27,7 @@ import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Sort;
 
@@ -64,9 +65,12 @@ class PerformanceServiceTest {
     @Mock
     private FcmService fcmService;
 
+    @Mock
+    private CacheManager cacheManager;
+
     @BeforeEach
     void init() {
-        performanceService = new PerformanceService(performancePriceRepository, performanceRepository, boxOfficeRankRepository, placeRepository, kopisService, fcmService);
+        performanceService = new PerformanceService(performancePriceRepository, performanceRepository, boxOfficeRankRepository, placeRepository, kopisService, fcmService, cacheManager);
     }
 
     @AfterEach
