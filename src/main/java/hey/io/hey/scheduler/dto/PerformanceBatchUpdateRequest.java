@@ -1,4 +1,4 @@
-package hey.io.hey.domain.scheduler.dto;
+package hey.io.hey.scheduler.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;

@@ -1,8 +1,8 @@
-package hey.io.hey.domain.scheduler.controller;
+package hey.io.hey.scheduler.controller;
 
 import com.google.firebase.messaging.FirebaseMessagingException;
 import hey.io.hey.common.response.SuccessResponse;
-import hey.io.hey.domain.scheduler.dto.PerformanceBatchUpdateRequest;
+import hey.io.hey.scheduler.dto.PerformanceBatchUpdateRequest;
 import hey.io.hey.domain.performance.service.PerformanceService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

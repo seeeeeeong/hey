@@ -21,6 +21,7 @@ import hey.io.hey.domain.kopis.service.KopisService;
 import hey.io.hey.domain.performance.mapper.PerformanceMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
@@ -53,6 +54,7 @@ public class PerformanceService {
     private final PlaceRepository placeRepository;
     private final KopisService kopisService;
     private final FcmService fcmService;
+    private final CacheManager cacheManager;
 
 
     @Cacheable(
@@ -107,6 +109,8 @@ public class PerformanceService {
         long startTime = System.currentTimeMillis();
 
         log.info("[Batch] Batch Updating Performances...");
+        logCacheState();
+
         KopisPerformanceRequest kopisPerformanceRequest = KopisPerformanceRequest.builder()
                 .stdate(from.format(DateTimeFormatter.ofPattern("yyyyMMdd")))
                 .eddate(to.format(DateTimeFormatter.ofPattern("yyyyMMdd")))
@@ -161,6 +165,11 @@ public class PerformanceService {
         log.info("[Batch] Performance has been Updated... Total Size: {}, New Performances Size: {}, Duration: {} ms", kopisPerformanceResponseList.size(), newPerformances.size(), duration);
 
         return performances.size();
+    }
+
+    private void logCacheState() {
+        cacheManager.getCache("PERFORMANCE").clear();
+        log.info("Cache 'PERFORMANCE' has been cleared.");
     }
 
 

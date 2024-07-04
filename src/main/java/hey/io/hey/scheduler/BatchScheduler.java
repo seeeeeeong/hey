@@ -1,4 +1,4 @@
-package hey.io.hey.domain.scheduler;
+package hey.io.hey.scheduler;
 
 import com.google.firebase.messaging.FirebaseMessagingException;
 import hey.io.hey.domain.performance.service.PerformanceService;
