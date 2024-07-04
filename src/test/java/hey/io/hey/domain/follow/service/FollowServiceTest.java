@@ -80,7 +80,8 @@ class FollowServiceTest {
     void follow_userNotFound() {
         // given
         User user = User.create("email", SocialCode.GOOGLE);
-        userRepository.save(user);        Performance performance1 = createPerformance("1");
+        userRepository.save(user);
+        Performance performance1 = createPerformance("1");
         performanceRepository.save(performance1);
 
         // when

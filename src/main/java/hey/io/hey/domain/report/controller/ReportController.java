@@ -4,6 +4,7 @@ import hey.io.hey.common.resolver.AuthUser;
 import hey.io.hey.common.response.SuccessResponse;
 import hey.io.hey.common.security.jwt.JwtTokenInfo;
 import hey.io.hey.domain.report.dto.ReportRequest;
+import hey.io.hey.domain.report.dto.ReportResponse;
 import hey.io.hey.domain.report.service.ReportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,11 +21,10 @@ public class ReportController {
     private final ReportService reportService;
 
     @PostMapping("/performances/{id}/report")
-    public ResponseEntity<Void> reportPerformance(@PathVariable("id") String performanceId,
-                                                                   @AuthUser JwtTokenInfo jwtTokenInfo,
-                                                                   @RequestBody ReportRequest request) {
-        reportService.reportPerformance(performanceId, jwtTokenInfo.getUserId(), request);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<SuccessResponse<ReportResponse>> reportPerformance(@PathVariable("id") String performanceId,
+                                                                             @AuthUser JwtTokenInfo jwtTokenInfo,
+                                                                             @RequestBody ReportRequest request) {
+        return SuccessResponse.of(reportService.reportPerformance(performanceId, jwtTokenInfo.getUserId(), request)).asHttp(HttpStatus.OK);
     }
 
 }

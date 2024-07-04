@@ -1,8 +1,6 @@
 package hey.io.hey.domain.report.dto;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 

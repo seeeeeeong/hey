@@ -61,22 +61,24 @@ public class PerformanceControllerTest {
     }
 
 
-    private PerformanceFilterRequest createPerformanceFilterRequest(List<PerformanceStatus> statuses) throws Exception {
+    private PerformanceFilterRequest createPerformanceFilterRequest(List<PerformanceStatus> statuses, String visit) throws Exception {
         Constructor<PerformanceFilterRequest> constructor = PerformanceFilterRequest.class.getDeclaredConstructor();
         constructor.setAccessible(true);
         PerformanceFilterRequest request = constructor.newInstance();
 
         setField(request, "statuses", statuses);
+        setField(request, "visit", visit);
 
         return request;
     }
 
-    private PerformanceSearchRequest createPerformanceSearchRequest(String keyword) throws Exception {
+    private PerformanceSearchRequest createPerformanceSearchRequest(String keyword, List<PerformanceStatus> statuses) throws Exception {
         Constructor<PerformanceSearchRequest> constructor = PerformanceSearchRequest.class.getDeclaredConstructor();
         constructor.setAccessible(true);
         PerformanceSearchRequest request = constructor.newInstance();
 
         setField(request, "keyword", keyword);
+        setField(request, "statuses", statuses);
 
         return request;
     }
@@ -128,7 +130,7 @@ public class PerformanceControllerTest {
     void getPerformancesByCondition() throws Exception {
         // given
         SliceResponse<PerformanceResponse> sliceResponse = new SliceResponse<>(new SliceImpl<>(Collections.emptyList(), PageRequest.of(0, 20), false));
-        PerformanceFilterRequest filterRequest = createPerformanceFilterRequest(Arrays.asList(PerformanceStatus.ONGOING, PerformanceStatus.UPCOMING));
+        PerformanceFilterRequest filterRequest = createPerformanceFilterRequest(Arrays.asList(PerformanceStatus.ONGOING, PerformanceStatus.UPCOMING), "n");
 
         // when
         when(performanceService.getPerformancesByCondition(any(PerformanceFilterRequest.class), eq(20), eq(0), eq(Direction.DESC))).thenReturn(sliceResponse);
@@ -145,7 +147,7 @@ public class PerformanceControllerTest {
     void searchPerformance() throws Exception {
         // given
         SliceResponse<PerformanceResponse> sliceResponse = new SliceResponse<>(new SliceImpl<>(Collections.emptyList(), PageRequest.of(0, 20), false));
-        PerformanceSearchRequest searchRequest = createPerformanceSearchRequest("keyword");
+        PerformanceSearchRequest searchRequest = createPerformanceSearchRequest("keyword", Arrays.asList(PerformanceStatus.ONGOING, PerformanceStatus.UPCOMING));
 
         // when
         when(performanceService.searchPerformances(any(PerformanceSearchRequest.class), eq(20), eq(0), eq(Direction.DESC))).thenReturn(sliceResponse);

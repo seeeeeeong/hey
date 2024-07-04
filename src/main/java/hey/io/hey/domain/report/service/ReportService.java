@@ -6,6 +6,7 @@ import hey.io.hey.domain.performance.domain.Performance;
 import hey.io.hey.domain.performance.repository.PerformanceRepository;
 import hey.io.hey.domain.report.domain.PerformanceReport;
 import hey.io.hey.domain.report.dto.ReportRequest;
+import hey.io.hey.domain.report.dto.ReportResponse;
 import hey.io.hey.domain.report.repository.PerformanceReportRepository;
 import hey.io.hey.domain.user.domain.User;
 import hey.io.hey.domain.user.repository.UserRepository;
@@ -23,7 +24,7 @@ public class ReportService {
     private final PerformanceReportRepository performanceReportRepository;
 
     @Transactional
-    public void reportPerformance(String performanceId, Long userId, ReportRequest request) {
+    public ReportResponse reportPerformance(String performanceId, Long userId, ReportRequest request) {
         Performance performance = performanceRepository.findById(performanceId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.PERFORMANCE_NOT_FOUND));
 
@@ -33,6 +34,7 @@ public class ReportService {
         PerformanceReport performanceReport = PerformanceReport.of(request, user, performance);
         performanceReportRepository.save(performanceReport);
 
+        return new ReportResponse(performanceId, userId);
     }
 
 }

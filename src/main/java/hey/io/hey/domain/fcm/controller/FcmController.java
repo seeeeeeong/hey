@@ -24,7 +24,7 @@ public class FcmController {
         fcmService.sendMessageByTopic(requestDTO.getTitle(), requestDTO.getBody());
         return ResponseEntity.ok().build();
     }
-    // fcm를 보낸다 ( token )
+
     @PostMapping("/message/fcm/token")
     public ResponseEntity sendMessageToken(@RequestBody MessageRequestDTO requestDTO) throws IOException, FirebaseMessagingException{
         fcmService.sendMessageByToken(requestDTO.getTitle(), requestDTO.getBody(), requestDTO.getTargetToken());
