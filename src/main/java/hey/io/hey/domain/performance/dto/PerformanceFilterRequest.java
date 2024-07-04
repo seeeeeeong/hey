@@ -13,5 +13,6 @@ import java.util.List;
 public class PerformanceFilterRequest {
 
     private List<PerformanceStatus> statuses = new ArrayList<>();
+    private String visit;
 
 }
