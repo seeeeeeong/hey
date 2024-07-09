@@ -1,4 +1,4 @@
-package hey.io.hey.domain.kopis.client.dto;
+package hey.io.hey.kopis.client.dto;
 
 public record KopisBoxOfficeResponse (
         String prfpd,

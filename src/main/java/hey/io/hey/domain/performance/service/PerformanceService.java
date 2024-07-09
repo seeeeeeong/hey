@@ -4,7 +4,6 @@ import com.google.firebase.messaging.FirebaseMessagingException;
 import hey.io.hey.common.exception.BusinessException;
 import hey.io.hey.common.exception.ErrorCode;
 import hey.io.hey.domain.fcm.service.FcmService;
-import hey.io.hey.domain.kopis.client.dto.*;
 import hey.io.hey.domain.performance.domain.BoxOfficeRank;
 import hey.io.hey.domain.performance.domain.enums.TimePeriod;
 import hey.io.hey.domain.performance.repository.BoxOfficeRankRepository;
@@ -17,7 +16,8 @@ import hey.io.hey.domain.performance.domain.Performance;
 import hey.io.hey.domain.performance.dto.*;
 import hey.io.hey.domain.performance.repository.PerformanceRepository;
 import hey.io.hey.domain.performance.domain.Place;
-import hey.io.hey.domain.kopis.service.KopisService;
+import hey.io.hey.kopis.client.dto.*;
+import hey.io.hey.kopis.service.KopisService;
 import hey.io.hey.domain.performance.mapper.PerformanceMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -126,7 +126,6 @@ public class PerformanceService {
 
         List<CompletableFuture<Void>> futures = new ArrayList<>();
         ExecutorService executorService = Executors.newFixedThreadPool(5);
-
 
         List<Performance> newPerformances = new ArrayList<>();
 

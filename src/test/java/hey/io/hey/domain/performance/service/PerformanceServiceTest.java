@@ -3,7 +3,7 @@ package hey.io.hey.domain.performance.service;
 import hey.io.hey.common.config.QuerydslConfig;
 import hey.io.hey.common.exception.BusinessException;
 import hey.io.hey.domain.fcm.service.FcmService;
-import hey.io.hey.domain.kopis.service.KopisService;
+import hey.io.hey.kopis.service.KopisService;
 import hey.io.hey.common.response.SliceResponse;
 import hey.io.hey.domain.performance.domain.BoxOfficeRank;
 import hey.io.hey.domain.performance.domain.Performance;
