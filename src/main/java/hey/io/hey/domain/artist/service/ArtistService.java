@@ -6,7 +6,7 @@ import hey.io.hey.domain.performance.domain.Performance;
 import hey.io.hey.domain.performance.domain.PerformanceArtist;
 import hey.io.hey.domain.performance.repository.PerformanceArtistRepository;
 import hey.io.hey.domain.performance.repository.PerformanceRepository;
-import hey.io.hey.spotify.config.SpotifyConfig;
+import hey.io.hey.common.config.SpotifyConfig;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hc.core5.http.ParseException;
@@ -41,6 +41,10 @@ public class ArtistService {
     SpotifyApi spotifyApi = new SpotifyApi.Builder()
             .setAccessToken(SpotifyConfig.accessToken())
             .build();
+
+
+
+
 
     @Transactional
     public int updateArtistsBatch() throws IOException, ParseException, SpotifyWebApiException {

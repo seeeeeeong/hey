@@ -3,21 +3,17 @@ package hey.io.hey.domain.performance.service;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import hey.io.hey.common.exception.BusinessException;
 import hey.io.hey.common.exception.ErrorCode;
+import hey.io.hey.common.kopis.client.dto.*;
+import hey.io.hey.domain.artist.domain.ArtistEntity;
+import hey.io.hey.domain.artist.dto.ArtistListResponse;
 import hey.io.hey.domain.fcm.service.FcmService;
-import hey.io.hey.domain.performance.domain.BoxOfficeRank;
+import hey.io.hey.domain.performance.domain.*;
 import hey.io.hey.domain.performance.domain.enums.TimePeriod;
-import hey.io.hey.domain.performance.repository.BoxOfficeRankRepository;
-import hey.io.hey.domain.performance.domain.PerformancePrice;
+import hey.io.hey.domain.performance.repository.*;
 import hey.io.hey.domain.performance.domain.enums.PerformanceStatus;
-import hey.io.hey.domain.performance.repository.PerformancePriceRepository;
-import hey.io.hey.domain.performance.repository.PlaceRepository;
 import hey.io.hey.common.response.SliceResponse;
-import hey.io.hey.domain.performance.domain.Performance;
 import hey.io.hey.domain.performance.dto.*;
-import hey.io.hey.domain.performance.repository.PerformanceRepository;
-import hey.io.hey.domain.performance.domain.Place;
-import hey.io.hey.kopis.client.dto.*;
-import hey.io.hey.kopis.service.KopisService;
+import hey.io.hey.common.kopis.service.KopisService;
 import hey.io.hey.domain.performance.mapper.PerformanceMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -52,6 +48,7 @@ public class PerformanceService {
     private final PerformanceRepository performanceRepository;
     private final BoxOfficeRankRepository boxOfficeRankRepository;
     private final PlaceRepository placeRepository;
+    private final PerformanceArtistRepository performanceArtistRepository;
     private final KopisService kopisService;
     private final FcmService fcmService;
     private final CacheManager cacheManager;
@@ -100,8 +97,16 @@ public class PerformanceService {
                 .orElseThrow(() -> new BusinessException(ErrorCode.PERFORMANCE_NOT_FOUND));
 
         return getPerformanceDetailResponse(performance);
-
     }
+
+    public List<ArtistListResponse> getPerformanceArtists(String performanceId) {
+
+        List<ArtistListResponse> performanceArtist = performanceArtistRepository.getPerformanceArtists(performanceId);
+
+        return performanceArtist;
+    }
+
+
 
     @CacheEvict(value = PERFORMANCE, allEntries = true)
     @Transactional

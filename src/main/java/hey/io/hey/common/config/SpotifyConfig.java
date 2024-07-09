@@ -1,4 +1,4 @@
-package hey.io.hey.spotify.config;
+package hey.io.hey.common.config;
 
 import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;

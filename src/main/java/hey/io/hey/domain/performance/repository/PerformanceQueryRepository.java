@@ -16,4 +16,5 @@ public interface PerformanceQueryRepository {
     Slice<PerformanceResponse> getPerformancesByCondition(PerformanceFilterRequest request, Pageable pageable, Direction direction);
     Slice<PerformanceResponse> searchPerformances(PerformanceSearchRequest request, Pageable pageable, Direction direction);
     List<Performance> getPerformancesByStartDate();
+
 }

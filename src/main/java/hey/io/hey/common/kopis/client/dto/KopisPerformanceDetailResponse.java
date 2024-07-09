@@ -1,4 +1,4 @@
-package hey.io.hey.kopis.client.dto;
+package hey.io.hey.common.kopis.client.dto;
 
 import hey.io.hey.domain.performance.domain.Performance;
 import hey.io.hey.domain.performance.domain.enums.PerformanceStatus;

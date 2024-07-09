@@ -4,6 +4,7 @@ import hey.io.hey.common.resolver.AuthUser;
 import hey.io.hey.common.response.SliceResponse;
 import hey.io.hey.common.response.SuccessResponse;
 import hey.io.hey.common.security.jwt.JwtTokenInfo;
+import hey.io.hey.domain.artist.dto.ArtistListResponse;
 import hey.io.hey.domain.performance.dto.*;
 import hey.io.hey.domain.performance.service.PerformanceService;
 import jakarta.validation.Valid;
@@ -53,4 +54,10 @@ public class PerformanceController {
                                                                                      @PathVariable("id") String performanceId) {
         return SuccessResponse.of(performanceService.getPerformance(performanceId)).asHttp(HttpStatus.OK);
     }
+
+    @GetMapping("/{id}/artists")
+    public ResponseEntity<SuccessResponse<List<ArtistListResponse>>> getPerformanceArtists(@PathVariable("id") String performanceId) {
+        return SuccessResponse.of(performanceService.getPerformanceArtists(performanceId)).asHttp(HttpStatus.OK);
+    }
+
 }

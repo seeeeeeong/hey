@@ -66,7 +66,6 @@ public class Performance extends BaseEntityWithUpdate {
         this.schedule = schedule;
     }
 
-
     public void updateStatus(PerformanceStatus status) {
         this.status = status;
     }
