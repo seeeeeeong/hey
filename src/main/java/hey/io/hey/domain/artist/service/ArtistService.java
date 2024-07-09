@@ -1,6 +1,9 @@
 package hey.io.hey.domain.artist.service;
 
+import hey.io.hey.common.exception.BusinessException;
+import hey.io.hey.common.exception.ErrorCode;
 import hey.io.hey.domain.artist.domain.ArtistEntity;
+import hey.io.hey.domain.artist.dto.ArtistResponse;
 import hey.io.hey.domain.artist.repository.ArtistRepository;
 import hey.io.hey.domain.performance.domain.Performance;
 import hey.io.hey.domain.performance.domain.PerformanceArtist;
@@ -42,9 +45,12 @@ public class ArtistService {
             .setAccessToken(SpotifyConfig.accessToken())
             .build();
 
+    public ArtistResponse getArtist(String artistId) {
+        ArtistEntity artist = artistRepository.findById(artistId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.ARTIST_NOT_FOUND));
 
-
-
+        return new ArtistResponse(artist);
+    }
 
     @Transactional
     public int updateArtistsBatch() throws IOException, ParseException, SpotifyWebApiException {
