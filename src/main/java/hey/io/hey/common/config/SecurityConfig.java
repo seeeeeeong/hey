@@ -25,6 +25,8 @@ public class SecurityConfig {
     private final JwtTokenProvider jwtTokenProvider;
 
     private final String[] permitAllEndpointList = {
+            "/artists/**",
+            "/search/**",
             "/login/oauth2/code/google",
             "/oauth2/login",
             "/oauth2/google/login",

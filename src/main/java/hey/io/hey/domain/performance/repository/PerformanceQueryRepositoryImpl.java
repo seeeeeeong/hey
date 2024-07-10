@@ -108,5 +108,4 @@ public class PerformanceQueryRepositoryImpl implements PerformanceQueryRepositor
     private BooleanExpression inStatus(List<PerformanceStatus> statuses) {
         return ObjectUtils.isEmpty(statuses) ? null : performance.status.in(statuses);
     }
-
 }

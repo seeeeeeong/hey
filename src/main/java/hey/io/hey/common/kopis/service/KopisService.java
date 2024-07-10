@@ -1,7 +1,7 @@
-package hey.io.hey.domain.kopis.service;
+package hey.io.hey.common.kopis.service;
 
-import hey.io.hey.domain.kopis.client.KopisFeignClient;
-import hey.io.hey.domain.kopis.client.dto.*;
+import hey.io.hey.common.kopis.client.KopisFeignClient;
+import hey.io.hey.common.kopis.client.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

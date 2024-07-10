@@ -3,7 +3,7 @@ package hey.io.hey.domain.performance.service;
 import hey.io.hey.common.config.QuerydslConfig;
 import hey.io.hey.common.exception.BusinessException;
 import hey.io.hey.domain.fcm.service.FcmService;
-import hey.io.hey.domain.kopis.service.KopisService;
+import hey.io.hey.common.kopis.service.KopisService;
 import hey.io.hey.common.response.SliceResponse;
 import hey.io.hey.domain.performance.domain.BoxOfficeRank;
 import hey.io.hey.domain.performance.domain.Performance;
@@ -12,10 +12,7 @@ import hey.io.hey.domain.performance.domain.Place;
 import hey.io.hey.domain.performance.domain.enums.PerformanceStatus;
 import hey.io.hey.domain.performance.domain.enums.TimePeriod;
 import hey.io.hey.domain.performance.dto.*;
-import hey.io.hey.domain.performance.repository.BoxOfficeRankRepository;
-import hey.io.hey.domain.performance.repository.PerformancePriceRepository;
-import hey.io.hey.domain.performance.repository.PerformanceRepository;
-import hey.io.hey.domain.performance.repository.PlaceRepository;
+import hey.io.hey.domain.performance.repository.*;
 import hey.io.hey.domain.user.domain.SocialCode;
 import hey.io.hey.domain.user.domain.User;
 import hey.io.hey.domain.user.repository.UserRepository;
@@ -57,6 +54,9 @@ class PerformanceServiceTest {
     private PerformancePriceRepository performancePriceRepository;
 
     @Autowired
+    private PerformanceArtistRepository performanceArtistRepository;
+
+    @Autowired
     private UserRepository userRepository;
 
     @Mock
@@ -70,7 +70,7 @@ class PerformanceServiceTest {
 
     @BeforeEach
     void init() {
-        performanceService = new PerformanceService(performancePriceRepository, performanceRepository, boxOfficeRankRepository, placeRepository, kopisService, fcmService, cacheManager);
+        performanceService = new PerformanceService(performancePriceRepository, performanceRepository, boxOfficeRankRepository, placeRepository, performanceArtistRepository, kopisService, fcmService, cacheManager);
     }
 
     @AfterEach

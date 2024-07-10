@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -40,6 +42,9 @@ public class Performance extends BaseEntityWithUpdate {
     private String storyUrls;
     private String schedule;
 
+    @OneToMany(mappedBy = "performance")
+    private List<PerformanceArtist> performanceArtists = new ArrayList<>();
+
     @Builder(toBuilder = true)
     private Performance(String id, Place place, String title, LocalDate startDate, LocalDate endDate,
                         String theater, String cast, String runtime, String age, String price,
@@ -60,7 +65,6 @@ public class Performance extends BaseEntityWithUpdate {
         this.storyUrls = storyUrls;
         this.schedule = schedule;
     }
-
 
     public void updateStatus(PerformanceStatus status) {
         this.status = status;

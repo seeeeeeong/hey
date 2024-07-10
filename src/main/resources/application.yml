@@ -4,9 +4,43 @@ spring:
   profiles:
     active: ${profile}
     include: oauth
+    group:
+      local:
+        - common
+      prod:
+        - common
+
   datasource:
     hikari:
       maximum-pool-size: 15
+
+---
+spring.config.active.on-profile: common
+
+kopis:
+  performance:
+    batch-count: 200
+    url: http://www.kopis.or.kr/openApi/restful
+  api:
+    key: ${KOPIS_API_KEY}
+
+spotify:
+  client-id: ${SPOTIFY_CLIENT_ID}
+  client-secret: ${SPOTIFY_CLIENT_SECRET}
+
+
+
+logging:
+  level:
+    org.springframework.cache: DEBUG
+
+fcm:
+  service-account-file: key/heyapplication-40e61-firebase-adminsdk-cd5mk-5f62242e62.json
+  topic-name: performance
+  project-id: heyapplication-40e61
+
+
+
 
 ---
 spring.config.active.on-profile: local
@@ -33,20 +67,28 @@ spring:
       host: localhost
       port: 6379
 
-kopis:
-  performance:
-    batch-count: 200
-    url: http://www.kopis.or.kr/openApi/restful
 
-  api:
-    key: ${KOPIS_API_KEY}
+---
+#spring.config.active.on-profile: prod
+#
+#spring:
+#  datasource:
+#    driver-class-name: org.postgresql.Driver
+#    url: jdbc:postgresql://host.docker.internal:3306/hey?characterEncoding=UTF-8&serverTimezone=Asia/Seoul
+#    username: root
+#    password:
+#
+#  data:
+#    redis:
+#      host: hey-redis
+#      port: 6379
+#
+#  jpa:
+#    hibernate:
+#      ddl-auto: validate
+#      format_sql: true
+#    show-sql: true
 
-logging:
-  level:
-    org.springframework.cache: DEBUG
 
-fcm:
-  service-account-file: key/heyapplication-40e61-firebase-adminsdk-cd5mk-5f62242e62.json # 비밀키 경로 ( 필수 )
-  topic-name: performance # topic 이름 ( topic 통신시에 필요함 )
-  project-id: heyapplication-40e61  # firebase 프로젝트 아이디 ( 필수 )
+
 
