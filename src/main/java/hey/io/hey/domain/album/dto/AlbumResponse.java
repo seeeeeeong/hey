@@ -1,5 +1,6 @@
 package hey.io.hey.domain.album.dto;
 
+import com.querydsl.core.annotations.QueryProjection;
 import hey.io.hey.domain.album.domain.AlbumEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -14,6 +15,7 @@ public class AlbumResponse {
     private String albumImage;
     private String releaseDate;
 
+    @QueryProjection
     public AlbumResponse(AlbumEntity album) {
         this.id = album.getId();
         this.title = album.getTitle();

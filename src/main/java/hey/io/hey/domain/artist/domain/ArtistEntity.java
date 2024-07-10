@@ -52,8 +52,4 @@ public class ArtistEntity extends BaseEntityWithUpdate {
                 .build();
     }
 
-    public void addAlbum(AlbumEntity album) {
-        this.albums.add(album);
-    }
-
 }

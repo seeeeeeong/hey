@@ -1,15 +1,16 @@
 package hey.io.hey.domain.artist.controller;
 
+import hey.io.hey.common.response.SliceResponse;
 import hey.io.hey.common.response.SuccessResponse;
+import hey.io.hey.domain.album.dto.AlbumResponse;
 import hey.io.hey.domain.artist.dto.ArtistResponse;
 import hey.io.hey.domain.artist.service.ArtistService;
+import hey.io.hey.domain.performance.dto.PerformanceResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("artists")
@@ -23,4 +24,19 @@ public class ArtistController {
         return SuccessResponse.of(artistService.getArtist(artistId)).asHttp(HttpStatus.OK);
     }
 
+    @GetMapping("/{id}/albums")
+    public ResponseEntity<SuccessResponse<SliceResponse<AlbumResponse>>> getAlbums(@PathVariable("id") String artistId,
+                                                                                   @RequestParam(value = "size", required = false, defaultValue = "20") int size,
+                                                                                   @RequestParam(value = "page", required = false, defaultValue = "0") int page,
+                                                                                   @RequestParam(name = "direction", required = false, defaultValue = "DESC") Sort.Direction direction) {
+        return SuccessResponse.of(artistService.getAlbums(artistId, size, page, direction)).asHttp(HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/performances")
+    public ResponseEntity<SuccessResponse<SliceResponse<PerformanceResponse>>> getArtistPerformances(@PathVariable("id") String artistId,
+                                                                                                     @RequestParam(value = "size", required = false, defaultValue = "20") int size,
+                                                                                                     @RequestParam(value = "page", required = false, defaultValue = "0") int page,
+                                                                                                     @RequestParam(name = "direction", required = false, defaultValue = "DESC") Sort.Direction direction) {
+        return SuccessResponse.of(artistService.getArtistPerformances(artistId, size, page, direction)).asHttp(HttpStatus.OK);
+    }
 }
