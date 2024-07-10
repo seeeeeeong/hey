@@ -27,4 +27,11 @@ public class ReportController {
         return SuccessResponse.of(reportService.reportPerformance(performanceId, jwtTokenInfo.getUserId(), request)).asHttp(HttpStatus.OK);
     }
 
+    @PostMapping("/artists/{id}/report")
+    public ResponseEntity<SuccessResponse<ReportResponse>> reportArtist(@PathVariable("id") String artistId,
+                                                                         @AuthUser JwtTokenInfo jwtTokenInfo,
+                                                                         @RequestBody ReportRequest request) {
+        return SuccessResponse.of(reportService.reportArtist(artistId, jwtTokenInfo.getUserId(), request)).asHttp(HttpStatus.OK);
+    }
+
 }
