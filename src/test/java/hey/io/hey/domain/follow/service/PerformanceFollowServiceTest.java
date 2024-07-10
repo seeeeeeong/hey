@@ -50,9 +50,12 @@ class PerformanceFollowServiceTest {
     @Autowired
     private ArtistRepository artistRepository;
 
+    @Autowired
+    private FollowArtistRepository followArtistRepository;
+
     @BeforeEach
     void init() {
-        followService = new FollowService(userRepository, performanceRepository, followPerformanceRepository, artistRepository);
+        followService = new FollowService(userRepository, performanceRepository, followPerformanceRepository, artistRepository, followArtistRepository);
     }
 
     @AfterEach

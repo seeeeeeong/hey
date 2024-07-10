@@ -5,6 +5,7 @@ import hey.io.hey.common.resolver.AuthUser;
 import hey.io.hey.common.response.SliceResponse;
 import hey.io.hey.common.response.SuccessResponse;
 import hey.io.hey.common.security.jwt.JwtTokenInfo;
+import hey.io.hey.domain.artist.dto.ArtistListResponse;
 import hey.io.hey.domain.follow.dto.FollowResponse;
 import hey.io.hey.domain.follow.service.FollowService;
 import hey.io.hey.domain.performance.dto.PerformanceResponse;
@@ -47,4 +48,11 @@ public class FollowController {
         return SuccessResponse.of(followService.followArtist(jwtTokenInfo.getUserId(), artistId)).asHttp(HttpStatus.OK);
     }
 
+    @GetMapping("/follow/artists")
+    public ResponseEntity<SuccessResponse<SliceResponse<ArtistListResponse>>> getFollowArtists(@AuthUser JwtTokenInfo jwtTokenInfo,
+                                                                                               @RequestParam(value = "size", required = false, defaultValue = "20") int size,
+                                                                                               @RequestParam(value = "page", required = false, defaultValue = "0") int page,
+                                                                                               @RequestParam(name = "direction", required = false, defaultValue = "DESC") Direction direction) {
+        return SuccessResponse.of(followService.getFollowArtists(jwtTokenInfo.getUserId(), size, page, direction)).asHttp(HttpStatus.OK);
+    }
 }

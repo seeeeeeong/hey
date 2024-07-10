@@ -4,6 +4,7 @@ import hey.io.hey.common.exception.BusinessException;
 import hey.io.hey.common.exception.ErrorCode;
 import hey.io.hey.common.response.SliceResponse;
 import hey.io.hey.domain.artist.domain.ArtistEntity;
+import hey.io.hey.domain.artist.dto.ArtistListResponse;
 import hey.io.hey.domain.artist.repository.ArtistRepository;
 import hey.io.hey.domain.follow.domain.ArtistFollow;
 import hey.io.hey.domain.follow.domain.PerformanceFollow;
@@ -93,4 +94,13 @@ public class FollowService {
         followArtistRepository.save(ArtistFollow.of(user, artist));
         return new FollowResponse(artist.getId(), "Follow Success");
     }
+
+    public SliceResponse<ArtistListResponse> getFollowArtists(Long userId, int size, int page, Direction direction) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
+
+        Slice<ArtistListResponse> followedArtist = followArtistRepository.getFollowArtists(user.getUserId(), Pageable.ofSize(size).withPage(page), direction);
+        return new SliceResponse<>(followedArtist);
+    }
+
 }
