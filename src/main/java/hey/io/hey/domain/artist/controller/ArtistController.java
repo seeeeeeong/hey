@@ -27,6 +27,14 @@ public class ArtistController {
         return SuccessResponse.of(artistService.getArtist(artistId)).asHttp(HttpStatus.OK);
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<SuccessResponse<SliceResponse<ArtistListResponse>>> searchArtists(@RequestParam(value = "keyword", required = false) String keyword,
+                                                                                            @RequestParam(value = "size", required = false, defaultValue = "20") int size,
+                                                                                            @RequestParam(value = "page", required = false, defaultValue = "0") int page,
+                                                                                            @RequestParam(name = "direction", required = false, defaultValue = "DESC") Sort.Direction direction) {
+        return SuccessResponse.of(artistService.searchArtists(keyword, size, page, direction)).asHttp(HttpStatus.OK);
+    }
+
     @GetMapping("/{id}/albums")
     public ResponseEntity<SuccessResponse<SliceResponse<AlbumResponse>>> getAlbums(@PathVariable("id") String artistId,
                                                                                    @RequestParam(value = "size", required = false, defaultValue = "20") int size,

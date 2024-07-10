@@ -64,6 +64,11 @@ public class ArtistService {
         return new ArtistResponse(artist);
     }
 
+    public SliceResponse<ArtistListResponse> searchArtists(String keyword, int size, int page, Sort.Direction direction) {
+        Slice<ArtistListResponse> artists = artistRepository.searchArtists(keyword, Pageable.ofSize(size).withPage(page), direction);
+        return new SliceResponse<>(artists);
+    }
+
     public SliceResponse<AlbumResponse> getAlbums(String artistId, int size, int page, Sort.Direction direction) {
 
         ArtistEntity artist = artistRepository.findById(artistId)
