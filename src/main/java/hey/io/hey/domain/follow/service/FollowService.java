@@ -23,6 +23,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -60,23 +61,11 @@ public class FollowService {
     }
 
     @Transactional
-    public FollowResponse deleteFollowPerformances(Long userId, String performanceId) {
-        User user = userRepository.findById(userId)
+    public void deleteFollowPerformances(Long userId, List<String> performanceIds) {
+        userRepository.findById(userId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
 
-        Performance performance = performanceRepository.findById(performanceId)
-                .orElseThrow(() -> new BusinessException(ErrorCode.PERFORMANCE_NOT_FOUND));
-
-        Optional<PerformanceFollow> userFollowPerformanceOptional = followPerformanceRepository.findByUserAndPerformance(user, performance);
-
-        if (userFollowPerformanceOptional.isPresent()) {
-            PerformanceFollow performanceFollow = userFollowPerformanceOptional.get();
-            followPerformanceRepository.delete(performanceFollow);
-        } else {
-            throw new BusinessException(ErrorCode.FOLLOW_NOT_FOUND);
-        }
-
-        return new FollowResponse(performanceId, "UnFollow Success");
+        followPerformanceRepository.deleteAllByIds(performanceIds);
     }
 
     @Transactional
@@ -103,4 +92,11 @@ public class FollowService {
         return new SliceResponse<>(followedArtist);
     }
 
+    @Transactional
+    public void deleteFollowArtists(Long userId, List<String> artistIds) {
+        userRepository.findById(userId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
+
+        followArtistRepository.deleteAllByIds(artistIds);
+    }
 }

@@ -6,6 +6,7 @@ import hey.io.hey.common.response.SliceResponse;
 import hey.io.hey.common.response.SuccessResponse;
 import hey.io.hey.common.security.jwt.JwtTokenInfo;
 import hey.io.hey.domain.artist.dto.ArtistListResponse;
+import hey.io.hey.domain.follow.dto.DeleteFollowRequest;
 import hey.io.hey.domain.follow.dto.FollowResponse;
 import hey.io.hey.domain.follow.service.FollowService;
 import hey.io.hey.domain.performance.dto.PerformanceResponse;
@@ -14,6 +15,9 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
@@ -36,10 +40,12 @@ public class FollowController {
         return SuccessResponse.of(followService.getFollowPerformances(jwtTokenInfo.getUserId(), size, page, direction)).asHttp(HttpStatus.OK);
     }
 
-    @DeleteMapping("/follow/performances/{id}")
-    public ResponseEntity<SuccessResponse<FollowResponse>> deleteFollowPerformances(@AuthUser JwtTokenInfo jwtTokenInfo,
-                                                                                    @PathVariable("id") String performanceId) {
-        return SuccessResponse.of(followService.deleteFollowPerformances(jwtTokenInfo.getUserId(), performanceId)).asHttp(HttpStatus.OK);
+    @DeleteMapping("/follow/performances")
+    public ResponseEntity<Void> deleteFollowPerformances(@AuthUser JwtTokenInfo jwtTokenInfo,
+                                                         @RequestBody DeleteFollowRequest deleteFollowRequest) {
+        followService.deleteFollowPerformances(jwtTokenInfo.getUserId(), deleteFollowRequest.getIds());
+        return ResponseEntity.noContent().build();
+
     }
 
     @PostMapping("/follow/artists/{id}")
@@ -54,5 +60,12 @@ public class FollowController {
                                                                                                @RequestParam(value = "page", required = false, defaultValue = "0") int page,
                                                                                                @RequestParam(name = "direction", required = false, defaultValue = "DESC") Direction direction) {
         return SuccessResponse.of(followService.getFollowArtists(jwtTokenInfo.getUserId(), size, page, direction)).asHttp(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/follow/artists")
+    public ResponseEntity<Void> deleteFollowArtists(@AuthUser JwtTokenInfo jwtTokenInfo,
+                                                    @RequestBody DeleteFollowRequest deleteFollowRequest) {
+        followService.deleteFollowArtists(jwtTokenInfo.getUserId(), deleteFollowRequest.getIds());
+        return ResponseEntity.noContent().build();
     }
 }
