@@ -6,11 +6,14 @@ import hey.io.hey.common.response.SliceResponse;
 import hey.io.hey.domain.album.dto.AlbumResponse;
 import hey.io.hey.domain.album.repository.AlbumRepository;
 import hey.io.hey.domain.artist.domain.ArtistEntity;
+import hey.io.hey.domain.artist.dto.ArtistListResponse;
 import hey.io.hey.domain.artist.dto.ArtistResponse;
 import hey.io.hey.domain.artist.repository.ArtistRepository;
+import hey.io.hey.domain.performance.domain.BoxOfficeRank;
 import hey.io.hey.domain.performance.domain.Performance;
 import hey.io.hey.domain.performance.domain.PerformanceArtist;
 import hey.io.hey.domain.performance.dto.PerformanceResponse;
+import hey.io.hey.domain.performance.repository.BoxOfficeRankRepository;
 import hey.io.hey.domain.performance.repository.PerformanceArtistRepository;
 import hey.io.hey.domain.performance.repository.PerformanceRepository;
 import hey.io.hey.common.config.SpotifyConfig;
@@ -48,6 +51,7 @@ public class ArtistService {
     private final PerformanceRepository performanceRepository;
     private final PerformanceArtistRepository performanceArtistRepository;
     private final AlbumRepository albumRepository;
+    private final BoxOfficeRankRepository boxOfficeRankRepository;
 
     SpotifyApi spotifyApi = new SpotifyApi.Builder()
             .setAccessToken(SpotifyConfig.accessToken())
@@ -73,6 +77,22 @@ public class ArtistService {
     public SliceResponse<PerformanceResponse> getArtistPerformances(String artistId, int size, int page, Sort.Direction direction) {
         Slice<PerformanceResponse> performances = performanceArtistRepository.getArtistPerformances(artistId, Pageable.ofSize(size).withPage(page), direction);
         return new SliceResponse<>(performances);
+    }
+
+    public List<ArtistListResponse> getArtistRank() {
+
+        List<BoxOfficeRank> performances = boxOfficeRankRepository.findAll();
+        String performanceIds = performances.get(0).getPerformanceIds();
+
+        List<String> performanceIdList = Arrays.asList(performanceIds.split("\\|"));
+
+        List<ArtistListResponse> artistListResponses = new ArrayList<>();
+
+        for (String performanceId : performanceIdList) {
+            List<ArtistListResponse> artists = performanceArtistRepository.getPerformanceArtists(performanceId);
+            artistListResponses.addAll(artists);
+        }
+        return artistListResponses;
     }
 
     @Transactional

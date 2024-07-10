@@ -3,6 +3,7 @@ package hey.io.hey.domain.artist.controller;
 import hey.io.hey.common.response.SliceResponse;
 import hey.io.hey.common.response.SuccessResponse;
 import hey.io.hey.domain.album.dto.AlbumResponse;
+import hey.io.hey.domain.artist.dto.ArtistListResponse;
 import hey.io.hey.domain.artist.dto.ArtistResponse;
 import hey.io.hey.domain.artist.service.ArtistService;
 import hey.io.hey.domain.performance.dto.PerformanceResponse;
@@ -11,6 +12,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("artists")
@@ -38,5 +41,10 @@ public class ArtistController {
                                                                                                      @RequestParam(value = "page", required = false, defaultValue = "0") int page,
                                                                                                      @RequestParam(name = "direction", required = false, defaultValue = "DESC") Sort.Direction direction) {
         return SuccessResponse.of(artistService.getArtistPerformances(artistId, size, page, direction)).asHttp(HttpStatus.OK);
+    }
+
+    @GetMapping("/rank")
+    public ResponseEntity<SuccessResponse<List<ArtistListResponse>>> getArtistRank() {
+        return SuccessResponse.of(artistService.getArtistRank()).asHttp(HttpStatus.OK);
     }
 }
