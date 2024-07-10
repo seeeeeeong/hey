@@ -1,7 +1,7 @@
 package hey.io.hey.domain.user.domain;
 
 import hey.io.hey.common.entity.BaseEntityWithUpdate;
-import hey.io.hey.domain.follow.domain.Follow;
+import hey.io.hey.domain.follow.domain.PerformanceFollow;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
@@ -37,7 +37,7 @@ public class User extends BaseEntityWithUpdate {
     private SocialCode socialCode;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<Follow> followingList;
+    private List<PerformanceFollow> followingList;
 
     private LocalDateTime deletedAt;
 

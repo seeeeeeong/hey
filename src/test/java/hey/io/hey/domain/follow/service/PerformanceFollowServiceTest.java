@@ -3,9 +3,11 @@ package hey.io.hey.domain.follow.service;
 import hey.io.hey.common.config.QuerydslConfig;
 import hey.io.hey.common.exception.BusinessException;
 import hey.io.hey.common.response.SliceResponse;
-import hey.io.hey.domain.follow.domain.Follow;
+import hey.io.hey.domain.artist.repository.ArtistRepository;
+import hey.io.hey.domain.follow.domain.PerformanceFollow;
 import hey.io.hey.domain.follow.dto.FollowResponse;
-import hey.io.hey.domain.follow.repository.FollowRepository;
+import hey.io.hey.domain.follow.repository.FollowArtistRepository;
+import hey.io.hey.domain.follow.repository.FollowPerformanceRepository;
 import hey.io.hey.domain.performance.domain.Performance;
 import hey.io.hey.domain.performance.domain.enums.PerformanceStatus;
 import hey.io.hey.domain.performance.dto.PerformanceResponse;
@@ -27,13 +29,12 @@ import org.springframework.data.domain.Sort;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.catchThrowable;
-import static org.assertj.core.api.FactoryBasedNavigableListAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Import(value = QuerydslConfig.class)
-class FollowServiceTest {
+class PerformanceFollowServiceTest {
 
     private FollowService followService;
 
@@ -44,18 +45,24 @@ class FollowServiceTest {
     private PerformanceRepository performanceRepository;
 
     @Autowired
-    private FollowRepository followRepository;
+    private FollowPerformanceRepository followPerformanceRepository;
+
+    @Autowired
+    private ArtistRepository artistRepository;
+
+    @Autowired
+    private FollowArtistRepository followArtistRepository;
 
     @BeforeEach
     void init() {
-        followService = new FollowService(userRepository, performanceRepository, followRepository);
+        followService = new FollowService(userRepository, performanceRepository, followPerformanceRepository, artistRepository, followArtistRepository);
     }
 
     @AfterEach
     void deleteAll() {
         userRepository.deleteAll();;
         performanceRepository.deleteAll();
-        followRepository.deleteAll();
+        followPerformanceRepository.deleteAll();
     }
 
     @Test
@@ -68,7 +75,7 @@ class FollowServiceTest {
         performanceRepository.save(performance1);
 
         // when
-        FollowResponse result = followService.follow(user.getUserId(), performance1.getId());
+        FollowResponse result = followService.followPerformance(user.getUserId(), performance1.getId());
 
         // then
         assertEquals(result.getPerformanceId(), performance1.getId());
@@ -85,7 +92,7 @@ class FollowServiceTest {
         performanceRepository.save(performance1);
 
         // when
-        Throwable throwable = catchThrowable(() -> followService.follow(2L, performance1.getId()));
+        Throwable throwable = catchThrowable(() -> followService.followPerformance(2L, performance1.getId()));
 
         // then
         Assertions.assertThat(throwable).isInstanceOf(BusinessException.class);
@@ -101,7 +108,7 @@ class FollowServiceTest {
         performanceRepository.save(performance1);
 
         // when
-        Throwable throwable = catchThrowable(() -> followService.follow(user.getUserId(), "2"));
+        Throwable throwable = catchThrowable(() -> followService.followPerformance(user.getUserId(), "2"));
 
         // then
         Assertions.assertThat(throwable).isInstanceOf(BusinessException.class);
@@ -115,11 +122,11 @@ class FollowServiceTest {
         userRepository.save(user);
         Performance performance1 = createPerformance("1");
         performanceRepository.save(performance1);
-        Follow follow = Follow.of(user, performance1);
-        followRepository.save(follow);
+        PerformanceFollow performanceFollow = PerformanceFollow.of(user, performance1);
+        followPerformanceRepository.save(performanceFollow);
 
         // when
-        Throwable throwable = catchThrowable(() -> followService.follow(user.getUserId(), performance1.getId()));
+        Throwable throwable = catchThrowable(() -> followService.followPerformance(user.getUserId(), performance1.getId()));
 
         // then
         Assertions.assertThat(throwable).isInstanceOf(BusinessException.class);
@@ -133,11 +140,11 @@ class FollowServiceTest {
         userRepository.save(user);
         Performance performance1 = createPerformance("1");
         performanceRepository.save(performance1);
-        Follow follow = Follow.of(user, performance1);
-        followRepository.save(follow);
+        PerformanceFollow performanceFollow = PerformanceFollow.of(user, performance1);
+        followPerformanceRepository.save(performanceFollow);
 
         // when
-        SliceResponse<PerformanceResponse> result = followService.getFollow(user.getUserId(), 20, 0, Sort.Direction.DESC);
+        SliceResponse<PerformanceResponse> result = followService.getFollowPerformances(user.getUserId(), 20, 0, Sort.Direction.DESC);
 
         // then
         List<PerformanceResponse> contents = result.getContent();
@@ -153,11 +160,11 @@ class FollowServiceTest {
         userRepository.save(user);
         Performance performance1 = createPerformance("1");
         performanceRepository.save(performance1);
-        Follow follow = Follow.of(user, performance1);
-        followRepository.save(follow);
+        PerformanceFollow performanceFollow = PerformanceFollow.of(user, performance1);
+        followPerformanceRepository.save(performanceFollow);
 
         // when
-        Throwable throwable = catchThrowable(() -> followService.getFollow(2L, 20, 0, Sort.Direction.DESC));
+        Throwable throwable = catchThrowable(() -> followService.getFollowPerformances(2L, 20, 0, Sort.Direction.DESC));
 
         // then
         Assertions.assertThat(throwable).isInstanceOf(BusinessException.class);
@@ -171,11 +178,11 @@ class FollowServiceTest {
         userRepository.save(user);
         Performance performance1 = createPerformance("1");
         performanceRepository.save(performance1);
-        Follow follow = Follow.of(user, performance1);
-        followRepository.save(follow);
+        PerformanceFollow performanceFollow = PerformanceFollow.of(user, performance1);
+        followPerformanceRepository.save(performanceFollow);
 
         // when
-        FollowResponse result = followService.deleteFollow(user.getUserId(), performance1.getId());
+        FollowResponse result = followService.deleteFollowPerformances(user.getUserId(), performance1.getId());
 
         // then
         assertEquals(result.getPerformanceId(), performance1.getId());
@@ -192,11 +199,11 @@ class FollowServiceTest {
         userRepository.save(user2);
         Performance performance1 = createPerformance("1");
         performanceRepository.save(performance1);
-        Follow follow = Follow.of(user1, performance1);
-        followRepository.save(follow);
+        PerformanceFollow performanceFollow = PerformanceFollow.of(user1, performance1);
+        followPerformanceRepository.save(performanceFollow);
 
         // when
-        Throwable throwable = catchThrowable(() -> followService.deleteFollow(user2.getUserId(), performance1.getId()));
+        Throwable throwable = catchThrowable(() -> followService.deleteFollowPerformances(user2.getUserId(), performance1.getId()));
 
         // then
         Assertions.assertThat(throwable).isInstanceOf(BusinessException.class);
@@ -210,11 +217,11 @@ class FollowServiceTest {
         userRepository.save(user);
         Performance performance1 = createPerformance("1");
         performanceRepository.save(performance1);
-        Follow follow = Follow.of(user, performance1);
-        followRepository.save(follow);
+        PerformanceFollow performanceFollow = PerformanceFollow.of(user, performance1);
+        followPerformanceRepository.save(performanceFollow);
 
         // when
-        Throwable throwable = catchThrowable(() -> followService.deleteFollow(user.getUserId(), "2"));
+        Throwable throwable = catchThrowable(() -> followService.deleteFollowPerformances(user.getUserId(), "2"));
 
         // then
         Assertions.assertThat(throwable).isInstanceOf(BusinessException.class);
@@ -230,7 +237,7 @@ class FollowServiceTest {
         performanceRepository.save(performance1);
 
         // when
-        Throwable throwable = catchThrowable(() -> followService.deleteFollow(user.getUserId(), "2"));
+        Throwable throwable = catchThrowable(() -> followService.deleteFollowPerformances(user.getUserId(), "2"));
 
         // then
         Assertions.assertThat(throwable).isInstanceOf(BusinessException.class);

@@ -46,6 +46,8 @@ public enum ErrorCode {
 
     // Artist
     ARTIST_NOT_FOUND(404, "AR001", "아티스트를 찾을 수 없습니다."),
+    ALREADY_FOLLOWED_ARTIST(404, "AR002", "이미 팔로우한 아티스트입니다."),
+
 
     // Place
     PLACE_NOT_FOUND(404, "PL001", "장소를 찾을 수 없습니다."),

@@ -1,6 +1,7 @@
 package hey.io.hey.domain.follow.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import hey.io.hey.domain.follow.domain.QPerformanceFollow;
 import hey.io.hey.domain.performance.dto.PerformanceResponse;
 import hey.io.hey.domain.performance.dto.QPerformanceResponse;
 import lombok.RequiredArgsConstructor;
@@ -11,23 +12,23 @@ import org.springframework.data.domain.Sort;
 
 import java.util.List;
 
-import static hey.io.hey.domain.follow.domain.QFollow.follow;
-import static hey.io.hey.domain.performance.domain.QPerformance.performance;
+import static hey.io.hey.domain.follow.domain.QPerformanceFollow.performanceFollow;
+
 
 @RequiredArgsConstructor
-public class FollowQueryRepositoryImpl implements FollowQueryRepository{
+public class FollowPerformanceQueryRepositoryImpl implements FollowPerformanceQueryRepository {
 
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Slice<PerformanceResponse> getFollow(Long userId, Pageable pageable, Sort.Direction direction) {
+    public Slice<PerformanceResponse> getFollowPerformances(Long userId, Pageable pageable, Sort.Direction direction) {
         int pageSize = pageable.getPageSize();
         List<PerformanceResponse> content = queryFactory.select(
-                new QPerformanceResponse(follow.performance.id, follow.performance.title, follow.performance.startDate, follow.performance.endDate,
-                                        follow.performance.poster, follow.performance.theater, follow.performance.status, follow.performance.createdAt))
-                .from(follow)
-                .where(follow.user.userId.eq(userId))
-                .orderBy(direction.isAscending() ? follow.createdAt.asc() : follow.createdAt.desc())
+                new QPerformanceResponse(performanceFollow.performance.id, performanceFollow.performance.title, performanceFollow.performance.startDate, performanceFollow.performance.endDate,
+                        performanceFollow.performance.poster, performanceFollow.performance.theater, performanceFollow.performance.status, performanceFollow.performance.createdAt))
+                .from(performanceFollow)
+                .where(performanceFollow.user.userId.eq(userId))
+                .orderBy(direction.isAscending() ? performanceFollow.createdAt.asc() : performanceFollow.createdAt.desc())
                 .offset(pageable.getOffset())
                 .limit(pageSize + 1)
                 .fetch();
