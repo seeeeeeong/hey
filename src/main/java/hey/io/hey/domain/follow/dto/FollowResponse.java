@@ -8,11 +8,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class FollowResponse {
 
-    private String performanceId;
+    private String id;
     private String message;
 
-    public FollowResponse(String performanceId, String message) {
-        this.performanceId = performanceId;
+    public FollowResponse(String id, String message) {
+        this.id = id;
         this.message = message;
     }
 

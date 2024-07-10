@@ -25,7 +25,7 @@ public class PerformanceArtistQueryRepositoryImpl implements PerformanceArtistQu
     @Override
     public List<ArtistListResponse> getPerformanceArtists(String performanceId) {
         return queryFactory.select(
-                new QArtistListResponse(QPerformanceArtist.performanceArtist))
+                new QArtistListResponse(QPerformanceArtist.performanceArtist.artist.id, QPerformanceArtist.performanceArtist.artist.artistName, QPerformanceArtist.performanceArtist.artist.artistImage))
                 .from(QPerformanceArtist.performanceArtist)
                 .where(QPerformanceArtist.performanceArtist.performance.id.eq(performanceId))
                 .orderBy(QPerformanceArtist.performanceArtist.artist.artistName.desc())

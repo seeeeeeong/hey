@@ -1,22 +1,18 @@
 package hey.io.hey.domain.follow.domain;
 
 import hey.io.hey.common.entity.BaseEntity;
-import hey.io.hey.domain.performance.domain.Performance;
+import hey.io.hey.domain.artist.domain.ArtistEntity;
 import hey.io.hey.domain.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Follow extends BaseEntity {
+public class ArtistFollow extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,20 +23,19 @@ public class Follow extends BaseEntity {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "performance_id")
-    private Performance performance;
+    @JoinColumn(name = "artist_id")
+    private ArtistEntity artist;
 
     @Builder
-    private Follow(User user, Performance performance) {
+    private ArtistFollow(User user, ArtistEntity artist) {
         this.user = user;
-        this.performance = performance;
+        this.artist = artist;
     }
 
-    public static Follow of(User user, Performance performance) {
-        return Follow.builder()
+    public static ArtistFollow of(User user, ArtistEntity artist) {
+        return ArtistFollow.builder()
                 .user(user)
-                .performance(performance)
+                .artist(artist)
                 .build();
     }
-
 }

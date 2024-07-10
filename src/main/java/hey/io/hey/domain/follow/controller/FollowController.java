@@ -21,24 +21,30 @@ public class FollowController {
 
     private final FollowService followService;
 
-    @PostMapping("/follow/{id}")
-    public ResponseEntity<SuccessResponse<FollowResponse>> follow(@AuthUser JwtTokenInfo jwtTokenInfo,
-                                                                  @PathVariable("id") String performanceId) {
-        return SuccessResponse.of(followService.follow(jwtTokenInfo.getUserId(), performanceId)).asHttp(HttpStatus.OK);
+    @PostMapping("/follow/performances/{id}")
+    public ResponseEntity<SuccessResponse<FollowResponse>> followPerformance(@AuthUser JwtTokenInfo jwtTokenInfo,
+                                                                             @PathVariable("id") String performanceId) {
+        return SuccessResponse.of(followService.followPerformance(jwtTokenInfo.getUserId(), performanceId)).asHttp(HttpStatus.OK);
     }
 
-    @GetMapping("/follow")
-    public ResponseEntity<SuccessResponse<SliceResponse<PerformanceResponse>>> getFollow(@AuthUser JwtTokenInfo jwtTokenInfo,
-                                                                                         @RequestParam(value = "size", required = false, defaultValue = "20") int size,
-                                                                                         @RequestParam(value = "page", required = false, defaultValue = "0") int page,
-                                                                                         @RequestParam(name = "direction", required = false, defaultValue = "DESC") Direction direction) {
-        return SuccessResponse.of(followService.getFollow(jwtTokenInfo.getUserId(), size, page, direction)).asHttp(HttpStatus.OK);
+    @GetMapping("/follow/performances")
+    public ResponseEntity<SuccessResponse<SliceResponse<PerformanceResponse>>> getFollowPerformances(@AuthUser JwtTokenInfo jwtTokenInfo,
+                                                                                                     @RequestParam(value = "size", required = false, defaultValue = "20") int size,
+                                                                                                     @RequestParam(value = "page", required = false, defaultValue = "0") int page,
+                                                                                                     @RequestParam(name = "direction", required = false, defaultValue = "DESC") Direction direction) {
+        return SuccessResponse.of(followService.getFollowPerformances(jwtTokenInfo.getUserId(), size, page, direction)).asHttp(HttpStatus.OK);
     }
 
-    @DeleteMapping("/follow/{id}")
-    public ResponseEntity<SuccessResponse<FollowResponse>> deleteFollow(@AuthUser JwtTokenInfo jwtTokenInfo,
-                                                                        @PathVariable("id") String performanceId) {
-        return SuccessResponse.of(followService.deleteFollow(jwtTokenInfo.getUserId(), performanceId)).asHttp(HttpStatus.OK);
+    @DeleteMapping("/follow/performances/{id}")
+    public ResponseEntity<SuccessResponse<FollowResponse>> deleteFollowPerformances(@AuthUser JwtTokenInfo jwtTokenInfo,
+                                                                                    @PathVariable("id") String performanceId) {
+        return SuccessResponse.of(followService.deleteFollowPerformances(jwtTokenInfo.getUserId(), performanceId)).asHttp(HttpStatus.OK);
+    }
+
+    @PostMapping("/follow/artists/{id}")
+    public ResponseEntity<SuccessResponse<FollowResponse>> followArtists(@AuthUser JwtTokenInfo jwtTokenInfo,
+                                                                         @PathVariable("id") String artistId) {
+        return SuccessResponse.of(followService.followArtist(jwtTokenInfo.getUserId(), artistId)).asHttp(HttpStatus.OK);
     }
 
 }

@@ -15,9 +15,9 @@ public class ArtistListResponse {
     private String artistImage;
 
     @QueryProjection
-    public ArtistListResponse(PerformanceArtist performanceArtist) {
-        this.id = performanceArtist.getArtist().getId();
-        this.artistName = performanceArtist.getArtist().getArtistName();
-        this.artistImage = performanceArtist.getArtist().getArtistImage();
+    public ArtistListResponse(String id, String artistName, String artistImage) {
+        this.id = id;
+        this.artistName = artistName;
+        this.artistImage = artistImage;
     }
 }
