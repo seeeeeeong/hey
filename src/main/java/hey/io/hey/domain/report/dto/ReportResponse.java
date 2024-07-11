@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ReportResponse {
 
-    private String performanceId;
+    private String id;
     private Long userId;
 
 }

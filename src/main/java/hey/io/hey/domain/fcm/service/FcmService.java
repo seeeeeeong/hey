@@ -27,12 +27,14 @@ public class FcmService {
 
     @PostConstruct
     public void initialize() throws IOException {
-        FirebaseOptions options = FirebaseOptions.builder()
-                .setCredentials(GoogleCredentials.fromStream(new ClassPathResource(serviceAccountFilePath).getInputStream()))
-                .setProjectId(projectId)
-                .build();
+        if (FirebaseApp.getApps().isEmpty()) {
+            FirebaseOptions options = FirebaseOptions.builder()
+                    .setCredentials(GoogleCredentials.fromStream(new ClassPathResource(serviceAccountFilePath).getInputStream()))
+                    .setProjectId(projectId)
+                    .build();
 
-        FirebaseApp.initializeApp(options);
+            FirebaseApp.initializeApp(options);
+        }
     }
 
     public void sendMessageByTopic(String title, String body, String topicName) throws FirebaseMessagingException {

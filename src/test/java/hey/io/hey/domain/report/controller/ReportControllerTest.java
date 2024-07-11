@@ -95,4 +95,29 @@ class ReportControllerTest {
         result.andExpect(status().is2xxSuccessful());
 
     }
+
+    @Test
+    @WithMockUser
+    void reportArtist() throws Exception {
+        // given
+        Long userId = 1L;
+        String accessToken = "Bearer " + jwtTokenProvider.createAccessToken(userId, UserRole.USER);
+
+        String artistId = "artistId";
+
+        ReportRequest request = createReportRequest(Arrays.asList("아티스트명"), "아티스트명 오류");
+        ReportResponse response = new ReportResponse(artistId, userId);
+
+        // when
+        when(reportService.reportArtist(eq(artistId), eq(userId), any(ReportRequest.class))).thenReturn(response);
+        ResultActions result = mockMvc.perform(post("/artists/{id}/report", artistId)
+                .with(SecurityMockMvcRequestPostProcessors.csrf())
+                .header("Authorization", accessToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)));
+
+        // then
+        result.andExpect(status().is2xxSuccessful());
+
+    }
 }
