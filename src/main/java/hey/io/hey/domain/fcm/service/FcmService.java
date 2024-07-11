@@ -22,9 +22,6 @@ public class FcmService {
     @Value("${fcm.service-account-file}")
     private String serviceAccountFilePath;
 
-    @Value("${fcm.topic-name}")
-    private String topicName;
-
     @Value("${fcm.project-id}")
     private String projectId;
 
@@ -38,7 +35,7 @@ public class FcmService {
         FirebaseApp.initializeApp(options);
     }
 
-    public void sendMessageByTopic(String title, String body) throws FirebaseMessagingException {
+    public void sendMessageByTopic(String title, String body, String topicName) throws FirebaseMessagingException {
         FirebaseMessaging.getInstance().send(Message.builder()
                 .setNotification(Notification.builder()
                         .setTitle(title)

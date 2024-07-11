@@ -101,7 +101,7 @@ public class PerformanceQueryRepositoryImpl implements PerformanceQueryRepositor
     public List<Performance> getPerformancesByStartDate() {
 
         return queryFactory.selectFrom(performance)
-                .where(performance.startDate.eq(LocalDate.now().plusDays(4)))
+                .where(performance.startDate.eq(LocalDate.now().plusDays(1)))
                 .fetch();
     }
 

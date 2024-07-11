@@ -50,6 +50,11 @@ public class BatchController {
         return SuccessResponse.of(performanceService.sendPerformancesNotification()).asHttp(HttpStatus.OK);
     }
 
+    @GetMapping("/artists/notification")
+    public ResponseEntity<SuccessResponse<Integer>> sendArtistsNotification() throws FirebaseMessagingException {
+        return SuccessResponse.of(artistService.sendArtistsNotification()).asHttp(HttpStatus.OK);
+    }
+
     @GetMapping("/artists")
     public ResponseEntity<SuccessResponse<Integer>> updateArtistsBatch() throws IOException, ParseException, SpotifyWebApiException, ExecutionException, InterruptedException {
         return SuccessResponse.of(artistService.updateArtistsBatch()).asHttp(HttpStatus.OK);

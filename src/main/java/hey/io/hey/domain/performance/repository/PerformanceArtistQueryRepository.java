@@ -14,4 +14,5 @@ public interface PerformanceArtistQueryRepository {
     List<ArtistListResponse> getPerformanceArtists(String performanceId);
     Slice<PerformanceResponse> getArtistPerformances(String artistId, Pageable pageable, Sort.Direction direction);
 
+    List<ArtistEntity> getArtistsByPerformanceStartDate();
 }

@@ -42,7 +42,7 @@ public class Performance extends BaseEntityWithUpdate {
     private String storyUrls;
     private String schedule;
 
-    @OneToMany(mappedBy = "performance")
+    @OneToMany(mappedBy = "performance", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PerformanceArtist> performanceArtists = new ArrayList<>();
 
     @Builder(toBuilder = true)
