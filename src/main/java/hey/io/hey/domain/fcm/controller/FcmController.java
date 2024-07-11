@@ -21,7 +21,7 @@ public class FcmController {
 
     @PostMapping("/message/fcm/topic")
     public ResponseEntity sendMessageTopic(@RequestBody MessageRequestDTO requestDTO) throws IOException, FirebaseMessagingException{
-        fcmService.sendMessageByTopic(requestDTO.getTitle(), requestDTO.getBody());
+        fcmService.sendMessageByTopic(requestDTO.getTitle(), requestDTO.getBody(), requestDTO.getTopic());
         return ResponseEntity.ok().build();
     }
 

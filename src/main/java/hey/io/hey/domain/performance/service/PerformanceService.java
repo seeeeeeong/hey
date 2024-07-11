@@ -256,7 +256,7 @@ public class PerformanceService {
         List<Performance> performanceList = performanceRepository.getPerformancesByStartDate();
         int sendCnt = 0;
         for (Performance performance : performanceList) {
-            fcmService.sendMessageByTopic(performance.getTitle(), "D-1");
+            fcmService.sendMessageByTopic(performance.getTitle(), "D-1", "Performance");
             sendCnt++;
         }
         return sendCnt;

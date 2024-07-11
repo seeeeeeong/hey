@@ -2,13 +2,13 @@ package hey.io.hey.domain.performance.service;
 
 import hey.io.hey.common.config.QuerydslConfig;
 import hey.io.hey.common.exception.BusinessException;
+import hey.io.hey.domain.artist.domain.ArtistEntity;
+import hey.io.hey.domain.artist.dto.ArtistListResponse;
+import hey.io.hey.domain.artist.repository.ArtistRepository;
 import hey.io.hey.domain.fcm.service.FcmService;
 import hey.io.hey.common.kopis.service.KopisService;
 import hey.io.hey.common.response.SliceResponse;
-import hey.io.hey.domain.performance.domain.BoxOfficeRank;
-import hey.io.hey.domain.performance.domain.Performance;
-import hey.io.hey.domain.performance.domain.PerformancePrice;
-import hey.io.hey.domain.performance.domain.Place;
+import hey.io.hey.domain.performance.domain.*;
 import hey.io.hey.domain.performance.domain.enums.PerformanceStatus;
 import hey.io.hey.domain.performance.domain.enums.TimePeriod;
 import hey.io.hey.domain.performance.dto.*;
@@ -29,6 +29,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Sort;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -59,6 +60,9 @@ class PerformanceServiceTest {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private ArtistRepository artistRepository;
+
     @Mock
     private KopisService kopisService;
 
@@ -79,6 +83,7 @@ class PerformanceServiceTest {
         performanceRepository.deleteAll();
         performancePriceRepository.deleteAll();;
         userRepository.deleteAll();
+        artistRepository.deleteAll();
     }
 
     @Test
@@ -269,6 +274,26 @@ class PerformanceServiceTest {
 
         // then
         assertThat(throwable).isInstanceOf(BusinessException.class);
+    }
+
+    @Test
+    @DisplayName("getPerformanceArtists - 성공")
+    void getPerformanceArtists() {
+        // given
+        Performance performance1 = createPerformance("1");
+        performanceRepository.save(performance1);
+
+        ArtistEntity artist = ArtistEntity.of("artistId", "name", "image", Arrays.asList("K-POP"));
+        artistRepository.save(artist);
+
+        PerformanceArtist performanceArtist = PerformanceArtist.of(performance1, artist);
+        performanceArtistRepository.save(performanceArtist);
+
+        List<ArtistListResponse> result = performanceService.getPerformanceArtists(performance1.getId());
+        assertThat(result.get(0).getId()).isEqualTo(artist.getId());
+        assertThat(result.get(0).getArtistName()).isEqualTo(artist.getArtistName());
+        assertThat(result.get(0).getArtistImage()).isEqualTo(artist.getArtistImage());
+
     }
 
     private Performance createPerformance(String id) {

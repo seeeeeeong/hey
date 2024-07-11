@@ -22,23 +22,22 @@ public class FcmService {
     @Value("${fcm.service-account-file}")
     private String serviceAccountFilePath;
 
-    @Value("${fcm.topic-name}")
-    private String topicName;
-
     @Value("${fcm.project-id}")
     private String projectId;
 
     @PostConstruct
     public void initialize() throws IOException {
-        FirebaseOptions options = FirebaseOptions.builder()
-                .setCredentials(GoogleCredentials.fromStream(new ClassPathResource(serviceAccountFilePath).getInputStream()))
-                .setProjectId(projectId)
-                .build();
+        if (FirebaseApp.getApps().isEmpty()) {
+            FirebaseOptions options = FirebaseOptions.builder()
+                    .setCredentials(GoogleCredentials.fromStream(new ClassPathResource(serviceAccountFilePath).getInputStream()))
+                    .setProjectId(projectId)
+                    .build();
 
-        FirebaseApp.initializeApp(options);
+            FirebaseApp.initializeApp(options);
+        }
     }
 
-    public void sendMessageByTopic(String title, String body) throws FirebaseMessagingException {
+    public void sendMessageByTopic(String title, String body, String topicName) throws FirebaseMessagingException {
         FirebaseMessaging.getInstance().send(Message.builder()
                 .setNotification(Notification.builder()
                         .setTitle(title)

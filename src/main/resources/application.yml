@@ -36,7 +36,6 @@ logging:
 
 fcm:
   service-account-file: key/heyapplication-40e61-firebase-adminsdk-cd5mk-5f62242e62.json
-  topic-name: performance
   project-id: heyapplication-40e61
 
 

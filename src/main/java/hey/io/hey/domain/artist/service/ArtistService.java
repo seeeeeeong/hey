@@ -1,5 +1,6 @@
 package hey.io.hey.domain.artist.service;
 
+import com.google.firebase.messaging.FirebaseMessagingException;
 import hey.io.hey.common.exception.BusinessException;
 import hey.io.hey.common.exception.ErrorCode;
 import hey.io.hey.common.response.SliceResponse;
@@ -9,6 +10,7 @@ import hey.io.hey.domain.artist.domain.ArtistEntity;
 import hey.io.hey.domain.artist.dto.ArtistListResponse;
 import hey.io.hey.domain.artist.dto.ArtistResponse;
 import hey.io.hey.domain.artist.repository.ArtistRepository;
+import hey.io.hey.domain.fcm.service.FcmService;
 import hey.io.hey.domain.performance.domain.BoxOfficeRank;
 import hey.io.hey.domain.performance.domain.Performance;
 import hey.io.hey.domain.performance.domain.PerformanceArtist;
@@ -52,6 +54,7 @@ public class ArtistService {
     private final PerformanceArtistRepository performanceArtistRepository;
     private final AlbumRepository albumRepository;
     private final BoxOfficeRankRepository boxOfficeRankRepository;
+    private final FcmService fcmService;
 
     SpotifyApi spotifyApi = new SpotifyApi.Builder()
             .setAccessToken(SpotifyConfig.accessToken())
@@ -173,4 +176,14 @@ public class ArtistService {
         return updateCnt;
     }
 
+    public int sendArtistsNotification() throws FirebaseMessagingException {
+        log.info("[Batch] Batch Send Artist Notification...");
+        List<ArtistEntity> artistList = performanceArtistRepository.getArtistsByPerformanceStartDate();
+        int sendCnt = 0;
+        for (ArtistEntity artist : artistList) {
+            fcmService.sendMessageByTopic(artist.getArtistName(), "D-1", "Artist");
+            sendCnt++;
+        }
+        return sendCnt;
+    }
 }

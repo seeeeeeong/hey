@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import hey.io.hey.common.response.SliceResponse;
 import hey.io.hey.common.response.SuccessResponse;
 import hey.io.hey.common.security.jwt.JwtTokenProvider;
+import hey.io.hey.domain.artist.domain.ArtistEntity;
+import hey.io.hey.domain.artist.dto.ArtistListResponse;
 import hey.io.hey.domain.performance.dto.*;
 import hey.io.hey.domain.performance.domain.enums.PerformanceStatus;
 import hey.io.hey.domain.performance.domain.enums.TimePeriod;
@@ -119,6 +121,20 @@ public class PerformanceControllerTest {
         return response;
     }
 
+    private ArtistListResponse createArtistListResponse(String id, String artistName, String artistImage) throws Exception {
+        Constructor<ArtistListResponse> constructor = ArtistListResponse.class.getDeclaredConstructor();
+        constructor.setAccessible(true);
+
+        ArtistListResponse response = constructor.newInstance();
+
+        setField(response, "id", id);
+        setField(response, "artistName", artistName);
+        setField(response, "artistImage", artistImage);
+
+        return response;
+    }
+
+
     private void setField(Object object, String fieldName, Object value) throws Exception {
         Field field = object.getClass().getDeclaredField(fieldName);
         field.setAccessible(true);
@@ -204,6 +220,31 @@ public class PerformanceControllerTest {
         // when
         when(performanceService.getPerformance(performanceId)).thenReturn(performanceDetailResponse);
         ResultActions result = mockMvc.perform(get("/performances/{id}", performanceId)
+                .with(SecurityMockMvcRequestPostProcessors.csrf())
+                .header("Authorization", accessToken)
+                .contentType(MediaType.APPLICATION_JSON));
+
+        // then
+        result.andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser
+    void getPerformanceArtist() throws Exception {
+        // given
+        Long userId = 1L;
+        String accessToken = "Bearer " + jwtTokenProvider.createAccessToken(userId, UserRole.USER);
+
+        String performanceId = "performanceId";
+
+        ArtistEntity artist = ArtistEntity.of("artistId", "name", "image", Arrays.asList("K-POP"));
+
+        ArtistListResponse artistListResponse = createArtistListResponse(artist.getId(), artist.getArtistName(), artist.getArtistImage());
+        List<ArtistListResponse> artistListResponses = Arrays.asList(artistListResponse);
+
+        // when
+        when(performanceService.getPerformanceArtists(performanceId)).thenReturn(artistListResponses);
+        ResultActions result = mockMvc.perform(get("/performances/{id}/artists", performanceId)
                 .with(SecurityMockMvcRequestPostProcessors.csrf())
                 .header("Authorization", accessToken)
                 .contentType(MediaType.APPLICATION_JSON));

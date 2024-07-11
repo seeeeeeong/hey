@@ -13,9 +13,11 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
 import org.springframework.data.domain.Sort;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static hey.io.hey.domain.performance.domain.QPerformance.performance;
+import static hey.io.hey.domain.performance.domain.QPerformanceArtist.performanceArtist;
 
 @RequiredArgsConstructor
 public class PerformanceArtistQueryRepositoryImpl implements PerformanceArtistQueryRepository{
@@ -25,10 +27,10 @@ public class PerformanceArtistQueryRepositoryImpl implements PerformanceArtistQu
     @Override
     public List<ArtistListResponse> getPerformanceArtists(String performanceId) {
         return queryFactory.select(
-                new QArtistListResponse(QPerformanceArtist.performanceArtist.artist.id, QPerformanceArtist.performanceArtist.artist.artistName, QPerformanceArtist.performanceArtist.artist.artistImage))
-                .from(QPerformanceArtist.performanceArtist)
-                .where(QPerformanceArtist.performanceArtist.performance.id.eq(performanceId))
-                .orderBy(QPerformanceArtist.performanceArtist.artist.artistName.desc())
+                new QArtistListResponse(performanceArtist.artist.id, performanceArtist.artist.artistName, performanceArtist.artist.artistImage))
+                .from(performanceArtist)
+                .where(performanceArtist.performance.id.eq(performanceId))
+                .orderBy(performanceArtist.artist.artistName.desc())
                 .fetch();
 
     }
@@ -39,11 +41,11 @@ public class PerformanceArtistQueryRepositoryImpl implements PerformanceArtistQu
         int pageSize = pageable.getPageSize();
 
         List<PerformanceResponse> content = queryFactory.select(
-                new QPerformanceResponse(QPerformanceArtist.performanceArtist.performance.id, QPerformanceArtist.performanceArtist.performance.title, QPerformanceArtist.performanceArtist.performance.startDate, QPerformanceArtist.performanceArtist.performance.endDate, QPerformanceArtist.performanceArtist.performance.poster,
-                                         QPerformanceArtist.performanceArtist.performance.theater, QPerformanceArtist.performanceArtist.performance.status, QPerformanceArtist.performanceArtist.performance.createdAt)).distinct()
-                .from(QPerformanceArtist.performanceArtist)
-                .where(QPerformanceArtist.performanceArtist.artist.id.eq(artistId))
-                .orderBy(direction.isAscending() ? QPerformanceArtist.performanceArtist.performance.startDate.asc() : QPerformanceArtist.performanceArtist.performance.startDate.desc())
+                new QPerformanceResponse(performanceArtist.performance.id, performanceArtist.performance.title, performanceArtist.performance.startDate, performanceArtist.performance.endDate, performanceArtist.performance.poster,
+                                         performanceArtist.performance.theater, performanceArtist.performance.status, performanceArtist.performance.createdAt)).distinct()
+                .from(performanceArtist)
+                .where(performanceArtist.artist.id.eq(artistId))
+                .orderBy(direction.isAscending() ? performanceArtist.performance.startDate.asc() : performanceArtist.performance.startDate.desc())
                 .offset(pageable.getOffset())
                 .limit(pageSize + 1)
                 .fetch();
@@ -56,5 +58,12 @@ public class PerformanceArtistQueryRepositoryImpl implements PerformanceArtistQu
         }
 
         return new SliceImpl<>(content, pageable, hasNext);
+    }
+
+    @Override
+    public List<ArtistEntity> getArtistsByPerformanceStartDate() {
+        return queryFactory.selectFrom(performanceArtist.artist)
+                .where(performanceArtist.performance.startDate.eq(LocalDate.now().plusDays(1)))
+                .fetch();
     }
 }
