@@ -36,9 +36,6 @@ public class User extends BaseEntityWithUpdate {
     @Column(nullable = false)
     private SocialCode socialCode;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<PerformanceFollow> followingList;
-
     private LocalDateTime deletedAt;
 
     @Builder(access = AccessLevel.PRIVATE)

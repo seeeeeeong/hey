@@ -48,7 +48,6 @@ public enum ErrorCode {
     ARTIST_NOT_FOUND(404, "AR001", "아티스트를 찾을 수 없습니다."),
     ALREADY_FOLLOWED_ARTIST(404, "AR002", "이미 팔로우한 아티스트입니다."),
 
-
     // Place
     PLACE_NOT_FOUND(404, "PL001", "장소를 찾을 수 없습니다."),
 
@@ -60,6 +59,9 @@ public enum ErrorCode {
     FCM_TOKEN_NOT_FOUND(404, "FC002", "FCM token이 없습니다."),
     FAILED_SUBSCRIBE_TOPIC(500, "FC003", "TOPIC 구독에 실패했습니다."),
     UNFAILED_SUBSCRIBE_TOPIC(500, "FC003", "TOPIC 구독취소에 실패했습니다."),
+
+    // REST
+    REST_CLIENT_FAILED(500, "R001", "외부로의 REST 통신에 실패하였습니다."),
 
     // Apple
     APPLE_EMAIL_NOT_FOUND(400, "A001", "애플 소셜서버로부터 이메일을 받지 못했습니다.");

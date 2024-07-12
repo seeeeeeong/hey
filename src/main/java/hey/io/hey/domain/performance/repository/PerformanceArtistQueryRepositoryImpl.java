@@ -61,8 +61,10 @@ public class PerformanceArtistQueryRepositoryImpl implements PerformanceArtistQu
     }
 
     @Override
-    public List<ArtistEntity> getArtistsByPerformanceStartDate() {
-        return queryFactory.selectFrom(performanceArtist.artist)
+    public List<ArtistListResponse> getArtistsByPerformanceStartDate() {
+        return queryFactory.select(
+                new QArtistListResponse(performanceArtist.artist.id, performanceArtist.artist.artistName, performanceArtist.artist.artistImage))
+                .from(performanceArtist)
                 .where(performanceArtist.performance.startDate.eq(LocalDate.now().plusDays(1)))
                 .fetch();
     }
