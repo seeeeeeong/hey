@@ -10,6 +10,7 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.querydsl.core.annotations.QueryProjection;
 import hey.io.hey.domain.performance.domain.Performance;
 import hey.io.hey.domain.performance.domain.enums.PerformanceStatus;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,20 +23,33 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Schema(description = "공연 목록 Response")
 public class PerformanceResponse {
 
+
+    @Schema(description = "공연 아이디")
     private String id;
+
+    @Schema(description = "공연명")
     private String title;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @JsonSerialize(using = LocalDateSerializer.class)
     @JsonDeserialize(using = LocalDateDeserializer.class)
+    @Schema(description = "공연 시작일")
     private LocalDate startDate;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @JsonSerialize(using = LocalDateSerializer.class)
     @JsonDeserialize(using = LocalDateDeserializer.class)
+    @Schema(description = "공연 종료일")
     private LocalDate endDate;
+
+    @Schema(description = "공연장")
     private String theater;
+
+    @Schema(description = "공연 포스터 이미지")
     private String poster;
+
+    @Schema(description = "공연 상태 (UPCOMING / ONGOING / COMPLETED")
     private PerformanceStatus status;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")

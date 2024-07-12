@@ -178,9 +178,9 @@ public class ArtistService {
 
     public int sendArtistsNotification() throws FirebaseMessagingException {
         log.info("[Batch] Batch Send Artist Notification...");
-        List<ArtistEntity> artistList = performanceArtistRepository.getArtistsByPerformanceStartDate();
+        List<ArtistListResponse> artistList = performanceArtistRepository.getArtistsByPerformanceStartDate();
         int sendCnt = 0;
-        for (ArtistEntity artist : artistList) {
+        for (ArtistListResponse artist : artistList) {
             fcmService.sendMessageByTopic(artist.getArtistName(), "D-1", "Artist");
             sendCnt++;
         }

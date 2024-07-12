@@ -33,6 +33,7 @@ public class Performance extends BaseEntityWithUpdate {
     private String cast;
     private String runtime;
     private String age;
+    @Column(length = 500)
     private String price;
     private String poster;
     private Boolean visit;

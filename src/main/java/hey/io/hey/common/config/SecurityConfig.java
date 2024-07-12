@@ -25,8 +25,8 @@ public class SecurityConfig {
     private final JwtTokenProvider jwtTokenProvider;
 
     private final String[] permitAllEndpointList = {
-            "/artists/**",
-            "/search/**",
+            "/swagger-ui/**",
+            "/v3/api-docs/**",
             "/login/oauth2/code/google",
             "/oauth2/login",
             "/oauth2/google/login",
@@ -34,13 +34,13 @@ public class SecurityConfig {
             "/oauth2/apple/login",
             "/oauth2/refresh",
             "/oauth2/expiredJwt",
-            "/users/join",
-            "/users/login",
             "/performances",
             "/performances/search",
             "/performances/new",
             "/performances/rank",
             "/performances/notification",
+            "/artists/search",
+            "/artists/rank",
             "/batch/**",
             "/message/**",
             "/h2-console/**"
