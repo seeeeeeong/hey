@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 @EnableJpaAuditing
 @EnableCaching
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "hey.io.hey")
 public class HeyApplication {
 
 	public static void main(String[] args) {
