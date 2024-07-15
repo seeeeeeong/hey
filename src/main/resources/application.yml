@@ -66,28 +66,28 @@ spring:
 
 
 ---
-spring.config.active.on-profile: prod
-
-spring:
-  datasource:
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/hey
-    username: ${SPRING_DATASOURCE_USERNAME}
-    password: ${SPRING_DATASOURCE_PASSWORD}
-
-  data:
-    redis:
-      host: redis
-      port: 6379
-
-  jpa:
-    hibernate:
-      ddl-auto: update
-      format_sql: true
-    show-sql: true
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
-
-
-
-
-
+#spring.config.active.on-profile: prod
+#
+#spring:
+#  datasource:
+#    driver-class-name: org.postgresql.Driver
+#    url: jdbc:postgresql://localhost:5432/hey
+#    username: ${SPRING_DATASOURCE_USERNAME}
+#    password: ${SPRING_DATASOURCE_PASSWORD}
+#
+#  data:
+#    redis:
+#      host: redis
+#      port: 6379
+#
+#  jpa:
+#    hibernate:
+#      ddl-auto: update
+#      format_sql: true
+#    show-sql: true
+#    database-platform: org.hibernate.dialect.PostgreSQLDialect
+#
+#
+#
+#
+#
